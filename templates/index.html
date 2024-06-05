@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, intial=scale=1.0">
+        <title>Time Tracker</title>
+    </head>
+    <body>
+        <h1>Time Tracker</h1>
+        <button onclick="startTimer()">Start Timer</button>
+        <button onclick="stopTimer()">Stop Timer</button>
+        <p id="status"></p>
+        <p id="elapsed time"></p>
+
+        <script>
+            async function startTimer() {
+                const response = await fetch('/start_timer', {
+                    method: POST
+                });
+                const data = await response.json();
+                document.getElementById('status').innerText = data.message;
+            }
+
+            async function stopTimer() {
+                const response = await fetch('/stop_timer', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                document.getElementById('status').innerText = data.message;
+                document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
+            }
+
+            async function checkElapsedTime() {
+                const response = await fetch('/elapsed_time');
+                const data = await response.json();
+                document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
+            }
+
+            setInterval(checkElapsedTime, 1000);
+        </script>
+    </body>
+</html>
