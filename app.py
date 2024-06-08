@@ -38,24 +38,33 @@ def stop_timer():
     if timer_data['start_time'] is None:
         return jsonify({"message": "Timer is not running"}), 400
     
-    start_time = timer_data['start_time']
-    end_time = datetime.now()
-    elapsed_time = (end_time - start_time).total_seconds()
+    elapsed_time_str = find_elapsed(timer_data['start_time'])
 
     timer_data['start_time'] = None
-    return jsonify({"message": "Timer stopped", "elapsed_time": elapsed_time}), 200
+    return jsonify({"message": "Timer stopped", "elapsed_time": elapsed_time_str}), 200
 
 # Route to check elapsed time without stopping the  timer
 @app.route('/elapsed_time', methods=['GET'])
 def elapsed_time():
     if timer_data['start_time'] is None:
         return jsonify({"message": "Timer is not running,", "elapsed_time": 0}), 200
-    
-    start_time = timer_data['start_time']
-    current_time = datetime.now()
-    elapsed_time = (current_time - start_time).total_seconds()
 
-    return jsonify({"elapsed_time": elapsed_time}), 200
+    elapsed_time_str = find_elapsed(timer_data['start_time'])
+
+    return jsonify({"elapsed_time": elapsed_time_str}), 200
+
+
+def find_elapsed(start):
+    start_time = start
+    current_time = datetime.now()
+    elapsed_time = current_time - start_time
+
+    hours, remainder = divmod(elapsed_time.total_seconds(), 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    elapsed_time_str = "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+    return elapsed_time_str
+
 
 
 # Run the Flask application

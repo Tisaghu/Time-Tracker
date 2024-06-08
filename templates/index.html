@@ -21,10 +21,19 @@
 
     <!-- JavaScript -->
     <script>
+
+        //Flag to indicate if timer is running
+        let timerRunning = false;
+        let intervalId;
+
         async function startTimer() {
             const response = await fetch('/start_timer', { method: 'POST' });
             const data = await response.json();
+            console.log('data constant: ', data);
             document.getElementById('status').innerText = data.message;
+            timerRunning = true;
+            clearInterval(intervalId)
+            intervalId = setInterval(checkElapsedTime, 1000);
         }
 
         async function stopTimer() {
@@ -32,15 +41,21 @@
             const data = await response.json();
             document.getElementById('status').innerText = data.message;
             document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
+            clearInterval(intervalId);
+            timerRunning = false;
         }
 
         async function checkElapsedTime() {
-            const response = await fetch('/elapsed_time');
-            const data = await response.json();
-            document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time.toFixed(1) + ' seconds';
+            if(timerRunning){
+                const response = await fetch('/elapsed_time');
+                const data = await response.json();
+                document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
+                console.log('Elapsed Time: ', data.elapsed_time)
+            }
+
         }
 
-        setInterval(checkElapsedTime, 1000);
+        
     </script>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
