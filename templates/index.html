@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, intial=scale=1.0">
-        <title>Time Tracker</title>
-    </head>
-    <body>
-        <h1>Time Tracker</h1>
-        <button onclick="startTimer()">Start Timer</button>
-        <button onclick="stopTimer()">Stop Timer</button>
-        <p id="status"></p>
-        <p id="elapsed time"></p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Tracker</title>
 
-        <script>
-            async function startTimer() {
-                const response = await fetch('/start_timer', {
-                    method: POST
-                });
-                const data = await response.json();
-                document.getElementById('status').innerText = data.message;
-            }
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1 class="text-center">Time Tracker</h1>
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="startTimer()">Start Timer</button>
+        <button class="btn btn-danger" onclick="stopTimer()">Stop Timer</button>
+    </div>
+    <div class="mt-4">
+        <p id="status" class="alert alert-info"></p>
+        <p id="elapsed_time" class="alert alert-warning"></p>
+    </div>
 
-            async function stopTimer() {
-                const response = await fetch('/stop_timer', {
-                    method: 'POST'
-                });
-                const data = await response.json();
-                document.getElementById('status').innerText = data.message;
-                document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
-            }
+    <!-- JavaScript -->
+    <script>
+        async function startTimer() {
+            const response = await fetch('/start_timer', { method: 'POST' });
+            const data = await response.json();
+            document.getElementById('status').innerText = data.message;
+        }
 
-            async function checkElapsedTime() {
-                const response = await fetch('/elapsed_time');
-                const data = await response.json();
-                document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
-            }
+        async function stopTimer() {
+            const response = await fetch('/stop_timer', { method: 'POST' });
+            const data = await response.json();
+            document.getElementById('status').innerText = data.message;
+            document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
+        }
 
-            setInterval(checkElapsedTime, 1000);
-        </script>
-    </body>
+        async function checkElapsedTime() {
+            const response = await fetch('/elapsed_time');
+            const data = await response.json();
+            document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time.toFixed(1) + ' seconds';
+        }
+
+        setInterval(checkElapsedTime, 1000);
+    </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

@@ -4,6 +4,10 @@ from datetime import datetime
 import json
 
 
+#set FLASK_ENV=development
+#flask run
+
+
 # Create a Flask application
 app = Flask(__name__)
 
