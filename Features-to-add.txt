@@ -1,0 +1,1 @@
+- Hide the "Start Timer" button after it is pressed
