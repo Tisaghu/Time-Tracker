@@ -1,0 +1,6 @@
+- Hide the "Start Timer" button after it is pressed
+- Export to CSV file
+- Import existing CSV file
+- "Save Time" button for after stopping the timer
+- Add and delete categories
+- Edit category of a tracked time before saving, or during save
