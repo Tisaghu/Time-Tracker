@@ -11,13 +11,14 @@
 <body class="container mt-5">
     <h1 class="text-center">Time Tracker</h1>
     <div class="text-center">
-        <button class="btn btn-Info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Category
         </button>
+        <!-- TODO: Make these buttons less hardcoded. Probably when adding and deleting categories.-->
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a class="dropdown-item" href="#" onclick="selectCategory('Work')">Work</a>
+            <a class="dropdown-item" href="#" onclick="selectCategory('Study')">Study</a>
+            <a class="dropdown-item" href="#" onclick="selectCategory('Exercise')">Exercise</a>
         </div>
         <button class="btn btn-primary" onclick="startTimer()">Start Timer</button>
         <button class="btn btn-danger" onclick="stopTimer()">Stop Timer</button>
@@ -61,6 +62,14 @@
                 console.log('Elapsed Time: ', data.elapsed_time)
             }
 
+        }
+
+        function selectCategory(categoryName) {
+            //Update the category button text
+            document.getElementById('dropdownMenuButton').textContent = categoryName;
+
+            //Save the selected category
+            selectedCategory = categoryName;
         }
 
         
