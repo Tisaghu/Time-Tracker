@@ -20,8 +20,8 @@
             <a class="dropdown-item" href="#" onclick="selectCategory('Study')">Study</a>
             <a class="dropdown-item" href="#" onclick="selectCategory('Exercise')">Exercise</a>
         </div>
-        <button class="btn btn-primary" onclick="startTimer()">Start Timer</button>
-        <button class="btn btn-danger" onclick="stopTimer()">Stop Timer</button>
+        <button id="startButton" class="btn btn-primary" onclick="startTimer()">Start Timer</button>
+        <button id="stopButton" class="btn btn-danger" onclick="stopTimer()">Stop Timer</button>
     </div>
     <div class="mt-4">
         <p id="status" class="alert alert-info"></p>
@@ -43,6 +43,13 @@
             timerRunning = true;
             clearInterval(intervalId)
             intervalId = setInterval(checkElapsedTime, 1000);
+
+            //Disable the start button and change its text
+            const startButton = document.getElementById('startButton');
+            startButton.disabled = true;
+            startButton.classList.add('btn-secondary');
+            startButton.classList.remove('btn-primary');
+            startButton.innerText = 'Timer Running';
         }
 
         async function stopTimer() {
@@ -52,6 +59,13 @@
             document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
             clearInterval(intervalId);
             timerRunning = false;
+
+            //Enable the start button and reset its text
+            const startButton = document.getElementById('startButton');
+            startButton.disabled = false;
+            startButton.classList.add('btn-primary');
+            startButton.classList.remove('btn-secondary');
+            startButton.innerText = 'Start Timer';
         }
 
         async function checkElapsedTime() {
