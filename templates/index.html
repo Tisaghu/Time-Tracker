@@ -26,6 +26,7 @@
     <div class="mt-4">
         <p id="status" class="alert alert-info"></p>
         <p id="elapsed_time" class="alert alert-warning"></p>
+        <p id="timer" class="alert alert-primary">00:00:00</p>
     </div>
 
     <!-- JavaScript -->
@@ -35,14 +36,19 @@
         let timerRunning = false;
         let intervalId;
 
-        async function startTimer() {
+        //variables for timer
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+
+        async function startTimer() 
+        {
             const response = await fetch('/start_timer', { method: 'POST' });
             const data = await response.json();
-            console.log('data constant: ', data);
             document.getElementById('status').innerText = data.message;
             timerRunning = true;
             clearInterval(intervalId)
-            intervalId = setInterval(checkElapsedTime, 1000);
+            intervalId = setInterval(updateTimer, 1000);
 
             //Disable the start button and change its text
             const startButton = document.getElementById('startButton');
@@ -52,10 +58,13 @@
             startButton.innerText = 'Timer Running';
         }
 
-        async function stopTimer() {
+
+        async function stopTimer() 
+        {
             const response = await fetch('/stop_timer', { method: 'POST' });
             const data = await response.json();
             document.getElementById('status').innerText = data.message;
+            console.log(data)
             document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
             clearInterval(intervalId);
             timerRunning = false;
@@ -68,7 +77,9 @@
             startButton.innerText = 'Start Timer';
         }
 
-        async function checkElapsedTime() {
+
+        async function checkElapsedTime() 
+        {
             if(timerRunning){
                 const response = await fetch('/elapsed_time');
                 const data = await response.json();
@@ -78,7 +89,37 @@
 
         }
 
-        function selectCategory(categoryName) {
+
+        function updateTimer()
+        {
+            const timerElement = document.getElementById('timer');
+
+            seconds++;
+            if(seconds >= 60)
+            {
+                seconds = 0;
+                minutes++;
+                if(minutes >= 60)
+                {
+                    hours++;
+                }
+            }
+
+            //format as HH:MM:SS
+            const formattedTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            timerElement.textContent = formattedTime;
+        }
+
+
+        //Helper function to pad single-digit numbers with a leading zero
+        function pad(num) 
+        {
+            return num.toString().padStart(2, '0');
+        }
+
+        
+        function selectCategory(categoryName) 
+        {
             //Update the category button text
             document.getElementById('dropdownMenuButton').textContent = categoryName;
 
