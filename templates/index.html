@@ -32,7 +32,16 @@
     <!-- JavaScript -->
     <script>
 
-        //Flags for indicating states of timer
+        // Constants for button texts
+        const START_TIMER_TEXT = 'Start Timer';
+        const STOP_TIMER_TEXT = 'Stop Timer';
+        const RESET_TIMER_TEXT = 'Reset Timer';
+        const TIMER_RUNNING_TEXT = 'Timer Running';
+        const RESUME_TIMER_TEXT = 'Resume Timer';
+        const TIMER_RESET_TEXT = 'Timer Reset';
+        const ELAPSED_TIME_TEXT = 'Elapsed Time: ';
+
+        // Flags for indicating states of timer
         let timerWasRun = false;
         let timerRunning = false;
         let canBeResumed = false;
@@ -41,7 +50,7 @@
         let intervalId;
         let selectedCategory = '';
 
-        //variables for timer
+        // Variables for timer
         let seconds = 0;
         let minutes = 0;
         let hours = 0;
@@ -69,43 +78,48 @@
                 startButton.classList.remove('btn-primary');
             }
             
-            startButton.innerText = 'Timer Running';
+            startButton.innerText = TIMER_RUNNING_TEXT;
 
             //Change Reset button back to Stop if needed
             if(canBeReset)
             {
                 const stopButton = document.getElementById('stopButton');
-                stopButton.innerText = 'Stop Timer';
+                stopButton.innerText = STOP_TIMER_TEXT;
             }
+
+            canBeReset = true;
         }
 
 
         async function stopTimer() 
         {
+            const startButton = document.getElementById('startButton');
+            const stopButton = document.getElementById('stopButton');
+
+            if(stopButton.innerText === RESET_TIMER_TEXT )
+            {
+                resetTimer();
+                return;
+            }
+
             const response = await fetch('/stop_timer', { method: 'POST' });
             const data = await response.json();
             document.getElementById('status').innerText = data.message;
             console.log(data)
-            document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
+            document.getElementById('elapsed_time').innerText = ELAPSED_TIME_TEXT + data.elapsed_time + ' seconds';
             clearInterval(intervalId);
             timerRunning = false;
 
-
-            const startButton = document.getElementById('startButton');
-            const stopButton = document.getElementById('stopButton');
-
-            console.log(timerWasRun);
-            console.log(timerRunning);
             if(timerWasRun && !timerRunning)
             {
                 startButton.disabled = false;
                 startButton.classList.add('btn-success');
                 startButton.classList.remove('btn-secondary');
-                startButton.innerText = 'Resume Timer';
+                startButton.innerText = RESUME_TIMER_TEXT;
                 canBeResumed = true;
 
                 //Change the stop button to reset timer button
-                stopButton.innerText = 'Reset Timer';
+                stopButton.innerText = RESET_TIMER_TEXT;
                 canBeReset = true;
             }
 
@@ -117,7 +131,7 @@
             if(timerRunning){
                 const response = await fetch('/elapsed_time');
                 const data = await response.json();
-                document.getElementById('elapsed_time').innerText = 'Elapsed Time: ' + data.elapsed_time + ' seconds';
+                document.getElementById('elapsed_time').innerText = ELAPSED_TIME_TEXT + data.elapsed_time + ' seconds';
                 console.log('Elapsed Time: ', data.elapsed_time)
             }
 
@@ -149,6 +163,32 @@
         function pad(num) 
         {
             return num.toString().padStart(2, '0');
+        }
+
+        function resetTimer()
+        {
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+
+            document.getElementById('timer').textContent = '00:00:00';
+            document.getElementById('elapsed_time').innerText = '';
+            document.getElementById('status').innerText = TIMER_RESET_TEXT;
+
+            const startButton = document.getElementById('startButton');
+            const stopButton = document.getElementById('stopButton');
+
+            startButton.disabled = false;
+            startButton.classList.add('btn-primary');
+            startButton.classList.remove('btn-secondary', 'btn-success');
+            startButton.innerText = START_TIMER_TEXT;
+
+            stopButton.innerText = STOP_TIMER_TEXT;
+
+            timerWasRun = false;
+            timerRunning = false;
+            canBeResumed = false;
+            canBeReset = false;
         }
 
         
