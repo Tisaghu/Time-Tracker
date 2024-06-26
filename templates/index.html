@@ -32,9 +32,14 @@
     <!-- JavaScript -->
     <script>
 
-        //Flag to indicate if timer is running
+        //Flags for indicating states of timer
+        let timerWasRun = false;
         let timerRunning = false;
+        let canBeResumed = false;
+        let canBeReset = false;
+
         let intervalId;
+        let selectedCategory = '';
 
         //variables for timer
         let seconds = 0;
@@ -47,6 +52,7 @@
             const data = await response.json();
             document.getElementById('status').innerText = data.message;
             timerRunning = true;
+            timerWasRun = true;
             clearInterval(intervalId)
             intervalId = setInterval(updateTimer, 1000);
 
@@ -54,8 +60,23 @@
             const startButton = document.getElementById('startButton');
             startButton.disabled = true;
             startButton.classList.add('btn-secondary');
-            startButton.classList.remove('btn-primary');
+            if(canBeResumed)
+            {
+                startButton.classList.remove('btn-success');
+            }
+            else
+            {
+                startButton.classList.remove('btn-primary');
+            }
+            
             startButton.innerText = 'Timer Running';
+
+            //Change Reset button back to Stop if needed
+            if(canBeReset)
+            {
+                const stopButton = document.getElementById('stopButton');
+                stopButton.innerText = 'Stop Timer';
+            }
         }
 
 
@@ -69,12 +90,25 @@
             clearInterval(intervalId);
             timerRunning = false;
 
-            //Enable the start button and reset its text
+
             const startButton = document.getElementById('startButton');
-            startButton.disabled = false;
-            startButton.classList.add('btn-primary');
-            startButton.classList.remove('btn-secondary');
-            startButton.innerText = 'Start Timer';
+            const stopButton = document.getElementById('stopButton');
+
+            console.log(timerWasRun);
+            console.log(timerRunning);
+            if(timerWasRun && !timerRunning)
+            {
+                startButton.disabled = false;
+                startButton.classList.add('btn-success');
+                startButton.classList.remove('btn-secondary');
+                startButton.innerText = 'Resume Timer';
+                canBeResumed = true;
+
+                //Change the stop button to reset timer button
+                stopButton.innerText = 'Reset Timer';
+                canBeReset = true;
+            }
+
         }
 
 
@@ -125,6 +159,7 @@
 
             //Save the selected category
             selectedCategory = categoryName;
+            console.log(selectedCategory);
         }
 
         

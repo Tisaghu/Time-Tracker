@@ -4,3 +4,5 @@
 - "Save Time" button for after stopping the timer
 - Add and delete categories
 - Edit category of a tracked time before saving, or during save
+- Start Timer button turns into Resume button if there is time on the timer
+- Pressing "Stop Timer" twice will reset the timer to 00:00:00 if it's not already there
