@@ -2,4 +2,5 @@
 - Import existing CSV file
 - "Save Time" button for after stopping the timer
 - Add and delete categories
+- Importing CSV records will add categories not already in categories 
 - Edit category of a tracked time before saving, or during save
