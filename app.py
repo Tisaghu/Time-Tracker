@@ -19,7 +19,9 @@ timer_data = {
 }
 
 # Storage for CSV information
+IMPORT_CSV_FILE = './history.csv'
 CSV_FILE = './time_records.csv'
+
 
 
 # Render HTML template
@@ -73,10 +75,11 @@ def find_elapsed(start):
     return elapsed_time_str
 
 
-def load_logs():
+#Used for imoprting logs from Time Tracker App - will most likely be modified/removed in the future
+def import_logs():
     logs = []
     try:
-        with open(CSV_FILE, mode='r', encoding='utf-8') as file:
+        with open(IMPORT_CSV_FILE, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             headers = reader.fieldnames
             print("CSV Headers:", headers) # Debugging print statement
@@ -93,6 +96,32 @@ def load_logs():
         pass # Handle the case where the file doesn't exist yet
     return logs
 
+@app.route('/test_import_logs', methods=['GET'])
+def test_import_logs():
+    logs = import_logs()
+    return jsonify(logs), 200
+
+#Used for loading regular time logs in the format of this application
+def load_logs():
+    logs = []
+    try:
+        with open(CSV_FILE, mode='r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            headers = reader.fieldnames
+            print("CSV Headers:", headers) # Debugging print statement
+            for row in reader:
+                print("CSV Row:", row) # Debugging print statement
+                logs.append({
+                    'record_id': row['record_id'],
+                    'start_time': row['start_time'],
+                    'end_time': row['end_time'],
+                    'duration': row['duration'],
+                    'category': row['category']
+                })
+    except FileNotFoundError:
+        pass # Handle the case where the file doesn't exist yet
+    return logs
+
 @app.route('/test_load_logs', methods=['GET'])
 def test_load_logs():
     logs = load_logs()
@@ -102,10 +131,17 @@ def test_load_logs():
 def save_log(log):
     file_exists = os.path.isfile(CSV_FILE)
     with open(CSV_FILE, mode='a', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=['record_id', 'duration', 'category'])
+        writer = csv.DictWriter(file, fieldnames=['record_id', 'start_time', 'end_time', 'duration', 'category'])
         if not file_exists:
             writer.writeheader()
         writer.writerow(log)
+
+@app.route('/test_save_log', methods=['POST'])
+def test_save_log():
+    logs = import_logs()
+    for log in logs:
+        save_log(log)
+    return jsonify({"message": "Logs imported and saved successfully"}), 200
 
 
 @app.route('/logs', methods=['GET'])
