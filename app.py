@@ -26,7 +26,6 @@ IMPORT_CSV_FILE = './history.csv'
 CSV_FILE = './time_records.csv'
 
 
-
 # Render HTML template
 @app.route('/')
 def index():
@@ -104,7 +103,7 @@ def test_import_logs():
     logs = import_logs()
     return jsonify(logs), 200
 
-#Used for loading regular time logs in the format of this application
+#Used for loading regular time logs in the format of this application - also imports categories
 def load_logs():
     logs = []
     try:
@@ -113,8 +112,6 @@ def load_logs():
             headers = reader.fieldnames
             #print("CSV Headers:", headers) # Debugging print statement
             for row in reader:
-                print("CSV Row: ", row) # Debugging print statement
-                print("Row Category: ", row['category'])
                 load_categories(row['category'])
                 logs.append({
                     'record_id': row['record_id'],
@@ -176,3 +173,14 @@ def load_categories(category):
 def test_load_categories():
     load_logs()
     return categories
+
+
+@app.route('/retrieve_categories', methods=['GET'])
+def retrieve_categories():
+    return jsonify({"categories": categories}), 200
+
+
+
+# Load logs at the start of the program
+load_logs()
+
