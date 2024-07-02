@@ -18,6 +18,9 @@ timer_data = {
     "start_time": None
 }
 
+logs = []
+categories = []
+
 # Storage for CSV information
 IMPORT_CSV_FILE = './history.csv'
 CSV_FILE = './time_records.csv'
@@ -77,7 +80,7 @@ def find_elapsed(start):
 
 #Used for imoprting logs from Time Tracker App - will most likely be modified/removed in the future
 def import_logs():
-    logs = []
+    #logs = []
     try:
         with open(IMPORT_CSV_FILE, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -108,9 +111,11 @@ def load_logs():
         with open(CSV_FILE, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             headers = reader.fieldnames
-            print("CSV Headers:", headers) # Debugging print statement
+            #print("CSV Headers:", headers) # Debugging print statement
             for row in reader:
-                print("CSV Row:", row) # Debugging print statement
+                print("CSV Row: ", row) # Debugging print statement
+                print("Row Category: ", row['category'])
+                load_categories(row['category'])
                 logs.append({
                     'record_id': row['record_id'],
                     'start_time': row['start_time'],
@@ -161,4 +166,13 @@ def add_log():
     save_log(log)
     return jsonify(log), 201
 
+def load_categories(category):
+    strip_cat = category.strip()
+    if strip_cat not in categories:
+        categories.append(strip_cat)
 
+
+@app.route('/test_load_categories', methods=['GET'])
+def test_load_categories():
+    load_logs()
+    return categories
