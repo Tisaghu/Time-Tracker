@@ -38,6 +38,8 @@
         const RESUME_TIMER_TEXT = 'Resume Timer';
         const TIMER_RESET_TEXT = 'Timer Reset';
         const ELAPSED_TIME_TEXT = 'Elapsed Time: ';
+        const CATEGORY_TEXT = 'Category: ';
+        const TIMER_DISPLAY_TEXT = 'Total Elapsed Time: ';
 
         // Timer state flags
         let timerWasRun = false;
@@ -46,12 +48,17 @@
         let canBeReset = false;
 
         let intervalId;
-        let selectedCategory = '';
+        let currentCategory = 'None';
 
         // Timer variables
         let seconds = 0;
         let minutes = 0;
         let hours = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('timer').innerHTML = `<strong>${TIMER_DISPLAY_TEXT}</strong> 00:00:00`;
+            updateCategoriesOnLoad();
+        })
 
         async function startTimer() 
         {
@@ -85,7 +92,12 @@
             const response = await fetch('/stop_timer', { method: 'POST' });
             const data = await response.json();
             document.getElementById('status').innerText = data.message;
-            document.getElementById('elapsed_time').innerText = ELAPSED_TIME_TEXT + data.elapsed_time + ' seconds';
+            document.getElementById('elapsed_time').innerHTML = `
+                <strong>${ELAPSED_TIME_TEXT}</strong>${data.elapsed_time} seconds
+                <br>
+                <strong>${CATEGORY_TEXT}</strong> ${currentCategory}
+            `;
+            
             clearInterval(intervalId);
             timerRunning = false;
 
@@ -140,7 +152,7 @@
 
         function updateTimerDisplay() 
         {
-            document.getElementById('timer').textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            document.getElementById('timer').innerHTML = `<strong>${TIMER_DISPLAY_TEXT}</strong> ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
         }
 
         function pad(num) 
@@ -151,7 +163,7 @@
         function selectCategory(categoryName) 
         {
             document.getElementById('dropdownMenuButton').textContent = categoryName;
-            selectedCategory = categoryName;
+            currentCategory = categoryName;
         }
 
         async function updateCategoriesOnLoad()
