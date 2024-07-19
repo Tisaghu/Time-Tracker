@@ -14,25 +14,21 @@ Routes:
 - /start_timer: Start the timer.
 - /stop_timer: Stop the timer and show elapsed time.
 - /check_elapsed_time: Check elapsed time without stopping the timer.
-- /test_import_logs: Test import of logs from a CSV file.
-- /test_load_logs: Test loading of logs.
-- /test_save_logs: Test saving of logs.
 - /logs: Get all logs.
 - /add_log: Add a new log.
-- /test_load_categories: Test loading of categories.
 - /retrieve_categories: Retrieve all categories.
 """
-
 
 import os
 import csv
 
 from datetime import datetime
-from flask import Flask, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, render_template
 
+main_bp = Blueprint('main', __name__, static_folder='static', template_folder='templates')
 
 # Create a Flask application
-app = Flask(__name__)
+# app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # In-memory storage for the start time
 timer_data = {
@@ -48,7 +44,7 @@ CSV_FILE = './time_records.csv'
 
 
 # Render HTML template
-@app.route('/')
+@main_bp.route('/')
 def index():
     """
 
@@ -64,7 +60,7 @@ def index():
 
 
 # Route to start the timer
-@app.route('/start_timer', methods=['POST'])
+@main_bp.route('/start_timer', methods=['POST'])
 def start_timer():
     """
     Start the timer.
@@ -82,7 +78,7 @@ def start_timer():
 
 
 # Route to stop the timer and show elapsed time
-@app.route('/stop_timer', methods=['POST'])
+@main_bp.route('/stop_timer', methods=['POST'])
 def stop_timer():
     """
     Stop the timer and show elapsed time.
@@ -103,7 +99,7 @@ def stop_timer():
 
 
 # Route to check elapsed time without stopping the  timer
-@app.route('/check_elapsed_time', methods=['GET'])
+@main_bp.route('/check_elapsed_time', methods=['GET'])
 def check_elapsed_time():
     """
     Check elapsed time without stopping the timer.
@@ -177,19 +173,7 @@ def import_logs():
         pass # Handle the case where the file doesn't exist yet
     return logs
 
-@app.route('/test_import_logs', methods=['GET'])
-def test_import_logs():
-    """
-    Test import of logs from a CSV file.
 
-    This view function handles the '/test_import_logs' URL and tests the import of logs
-    from a CSV file.
-
-    Returns:
-    Response: A JSON response with the imported logs.
-    """
-    imported_logs = import_logs()
-    return jsonify(imported_logs), 200
 
 #Used for loading regular time logs in the format of this application - also imports categories
 def load_logs():
@@ -220,20 +204,6 @@ def load_logs():
         pass
     return logs
 
-@app.route('/test_load_logs', methods=['GET'])
-def test_load_logs():
-    """
-    Test loading of logs from a CSV file.
-
-    This view function handles the '/test_load_logs' URL and tests the loading of logs
-    from a CSV file.
-
-    Returns:
-    Response: A JSON response with the loaded logs.
-    """
-    loaded_logs = load_logs()
-    return jsonify(loaded_logs), 200
-
 
 def save_log(log):
     """
@@ -253,28 +223,8 @@ def save_log(log):
             writer.writeheader()
         writer.writerow(log)
 
-@app.route('/test_save_log', methods=['POST'])
-def test_save_log():
-    """
-    Test saving of logs to a CSV file.
 
-    This view function handles the '/test_save_log' URL and tests the saving of logs
-    to a CSV file.
-
-    Returns:
-    Response: A JSON response with a success message.
-
-    For testing POST:
-    curl -X POST http://127.0.0.1:5000/test_save_log
-
-    """
-    imported_logs = import_logs()
-    for log in imported_logs:
-        save_log(log)
-    return jsonify({"message": "Logs imported and saved successfully"}), 200
-
-
-@app.route('/logs', methods=['GET'])
+@main_bp.route('/logs', methods=['GET'])
 def get_logs():
     """
     Get all logs.
@@ -289,7 +239,7 @@ def get_logs():
     return jsonify(loaded_logs)
 
 
-@app.route('/add_log', methods=['POST'])
+@main_bp.route('/add_log', methods=['POST'])
 def add_log():
     """
     Add a new log.
@@ -323,7 +273,7 @@ def load_categories(category):
         categories.append(strip_cat)
 
 
-@app.route('/test_load_categories', methods=['GET'])
+@main_bp.route('/test_load_categories', methods=['GET'])
 def test_load_categories():
     """
     Test loading of categories.
@@ -338,7 +288,7 @@ def test_load_categories():
     return categories
 
 
-@app.route('/retrieve_categories', methods=['GET'])
+@main_bp.route('/retrieve_categories', methods=['GET'])
 def retrieve_categories():
     """
     Retrieve all categories.
