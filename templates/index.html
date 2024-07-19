@@ -130,7 +130,7 @@
         async function checkElapsedTime() 
         {
             if (timerRunning) {
-                const response = await fetch('/elapsed_time');
+                const response = await fetch('/check_elapsed_time');
                 const data = await response.json();
                 document.getElementById('elapsed_time').innerText = ELAPSED_TIME_TEXT + data.elapsed_time + ' seconds';
             }
