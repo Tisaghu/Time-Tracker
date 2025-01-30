@@ -50,7 +50,7 @@ def index():
 
     Render the home page.
 
-    This view function handles the root URL and returns the rendered HTML template 
+    Handles the root URL and returns the rendered HTML template 
     for the home page.
 
     Returns:
@@ -65,7 +65,7 @@ def start_timer():
     """
     Start the timer.
     
-    This view function handles the '/start_timer' URL and starts the timer by recording the current
+    Handles the '/start_timer' URL and starts the timer by recording the current
     time. If the timer is already running, it returns an error message.
     
     Returns:
@@ -83,7 +83,7 @@ def stop_timer():
     """
     Stop the timer and show elapsed time.
     
-    This view function handles the '/stop_timer' URL and stops the timer by calculating
+    Handles the '/stop_timer' URL and stops the timer by calculating
     the elapsed time since the timer started. If the timer is not  running, it returns an error
     message.
     
@@ -104,7 +104,7 @@ def check_elapsed_time():
     """
     Check elapsed time without stopping the timer.
     
-    This view function handles the '/check_elapsed_time' URL and calculates the elapsed time
+    Handles the '/check_elapsed_time' URL and calculates the elapsed time
     since the timer started without stopping the timer. If the timer is not running, it returns
     an error message.
      
@@ -123,7 +123,7 @@ def find_elapsed(start):
     """
     Calculate the elapsed time since the start time.
 
-    This function calculates the elapsed time in hours, minutes, and seconds since the 
+    Calculates the elapsed time in hours, minutes, and seconds since the 
     provided start time.
 
     Args:
@@ -148,7 +148,7 @@ def import_logs():
     """
     Import logs from a CSV file.
 
-    This function reads logs from the specified CSV file and appends them to the logs list.
+    Reads logs from the specified CSV file and appends them to the logs list.
     If the file does not exist, it handles the exception gracefully.
 
     Returns:
@@ -180,7 +180,7 @@ def load_logs():
     """
     Load logs from a CSV file.
 
-    This function reads logs from the specified CSV file and appends them to the logs list.
+    Reads logs from the specified CSV file and appends them to the logs list.
     It also imports categories from the logs. If the file does not exist, it handles the 
     exception gracefully.
 
@@ -209,7 +209,7 @@ def save_log(log):
     """
     Save a log to the CSV file.
 
-    This function saves a log to the specified CSV file. If the file does not exist,
+    Saves a log to the specified CSV file. If the file does not exist,
     it creates a new file with headers.
 
     Args:
@@ -229,8 +229,7 @@ def get_logs():
     """
     Get all logs.
 
-    This view function handles the '/logs' URL and returns all the logs loaded from the
-    CSV file.
+    Handles the '/logs' URL and returns all the logs loaded from the CSV file.
 
     Returns:
     Response: A JSON response with all the logs.
@@ -244,7 +243,7 @@ def add_log():
     """
     Add a new log.
 
-    This view function handles the '/add_log' URL and adds a new log to the CSV file.
+    Handles the '/add_log' URL and adds a new log to the CSV file.
 
     Returns:
     Response: A JSON response with the added log.
@@ -262,7 +261,7 @@ def load_categories(category):
     """
     Load a category into the categories list.
 
-    This function strips any leading or trailing whitespace from the provided category
+    Strips any leading or trailing whitespace from the provided category
     and adds it to the categories list if it is not already present.
 
     Args:
@@ -278,7 +277,7 @@ def test_load_categories():
     """
     Test loading of categories.
 
-    This view function handles the '/test_load_categories' URL and tests the loading of
+    Handles the '/test_load_categories' URL and tests the loading of
     categories by calling the load_logs function, which also imports categories.
 
     Returns:
@@ -293,7 +292,7 @@ def retrieve_categories():
     """
     Retrieve all categories.
 
-    This view function handles the '/retrieve_categories' URL and returns all the
+    Handles the '/retrieve_categories' URL and returns all the
     categories that have been loaded.
 
     Returns:

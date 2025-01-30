@@ -28,7 +28,7 @@ def test_import_logs():
     """
     Test import of logs from a CSV file.
 
-    This view function handles the '/test_import_logs' URL and tests the import of logs
+    Handles the '/test_import_logs' URL and tests the import of logs
     from a CSV file.
 
     Returns:
@@ -42,7 +42,7 @@ def test_load_logs():
     """
     Test loading of logs from a CSV file.
 
-    This view function handles the '/test_load_logs' URL and tests the loading of logs
+    Handles the '/test_load_logs' URL and tests the loading of logs
     from a CSV file.
 
     Returns:
@@ -56,7 +56,7 @@ def test_save_log():
     """
     Test saving of logs to a CSV file.
 
-    This view function handles the '/test_save_log' URL and tests the saving of logs
+    Handles the '/test_save_log' URL and tests the saving of logs
     to a CSV file.
 
     Returns:
