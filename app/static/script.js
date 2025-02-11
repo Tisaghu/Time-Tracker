@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function startTimer() 
 {
-    const response = await fetch('/start_timer', { method: 'POST' });
+    const response = await fetch('/timer/start', { method: 'POST' });
     const data = await response.json();
     document.getElementById('status').innerText = data.message;
     timerRunning = true;
@@ -57,7 +57,7 @@ async function stopOrResetTimer()
 
 async function stopTimer() 
 {
-    const response = await fetch('/stop_timer', { method: 'POST' });
+    const response = await fetch('/timer/stop', { method: 'POST' });
     const data = await response.json();
     document.getElementById('status').innerText = data.message;
     document.getElementById('elapsed_time').innerHTML = `
@@ -98,7 +98,7 @@ function resetTimer()
 async function checkElapsedTime() 
 {
     if (timerRunning) {
-        const response = await fetch('/check_elapsed_time');
+        const response = await fetch('/timer/check');
         const data = await response.json();
         document.getElementById('elapsed_time').innerText = ELAPSED_TIME_TEXT + data.elapsed_time + ' seconds';
     }
@@ -136,7 +136,7 @@ function selectCategory(categoryName)
 
 async function updateCategoriesOnLoad()
 {
-    const response = await fetch('/retrieve_categories');
+    const response = await fetch('/logs/categories');
     const data = await response.json();
     const catgoryDropdown = document.getElementById('categoryDropdown');
 
@@ -145,9 +145,9 @@ async function updateCategoriesOnLoad()
     if(data.categories.length === 0)
     {
         const noCategoriesItem = document.createElement('a');
-        categoryItem.className = 'dropdown-item';
-        categoryItem.href = '#';
-        categoryItem.textContent = 'No Categories';
+        noCategoriesItem.className = 'dropdown-item';
+        noCategoriesItem.href = '#';
+        noCategoriesItem.textContent = 'No Categories';
         categoryDropdown.appendChild(noCategoriesItem);
     }
     else
