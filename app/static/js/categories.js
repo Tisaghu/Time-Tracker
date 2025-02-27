@@ -3,12 +3,29 @@
 import { API } from './api.js';
 import { setCurrentCategory } from './timer.js';
 
+//Global variables
+const categoryDropdown = document.getElementById('categoryDropdown');
+
 export function updateCategoriesOnLoad() {
+    console.log("Running updateCategoriesOnLoad()"); //Debugging
+    const categoryDropdown = document.getElementById('categoryDropdown');
+
+    if(!categoryDropdown) {
+        console.error("Category dropdown not found!");
+        return;
+    }
+
+    categoryDropdown.innerHTML = ''; // Clear existing items before adding new categories
+    console.log("Cleared category dropdown items."); //Debugging
+
     API.getCategories().then(data => {
         console.log("Fetched categories from API:", data); //Debugging
 
-        //const categoryDropdown = document.getElementById('categoryDropdown');
-        //categoryDropdown.innerHTML = ''; // Clear existing items
+        if(!data || !data.categories) {
+            console.error("No categories found in API response!");
+            return;
+        }
+
 
         if (data.categories.length === 0) {
             console.log("No categories found, adding 'No Categories' message.")
@@ -19,12 +36,8 @@ export function updateCategoriesOnLoad() {
             categoryDropdown.appendChild(noCategoriesItem);
         } else {
             data.categories.forEach(category => {
-                const categoryItem = document.createElement('a');
-                categoryItem.className = 'dropdown-item';
-                categoryItem.href = '#';
-                categoryItem.textContent = category;
-                categoryItem.onclick = () => selectCategory(category);
-                categoryDropdown.appendChild(categoryItem);
+                addCategoryToDropdown(category);
+                console.log("Added category to dropdown:", category); //Debugging
             });
         }
 
@@ -33,8 +46,28 @@ export function updateCategoriesOnLoad() {
     });
 }
 
+function addCategoryToDropdown(categoryName) {
+    console.log("Adding category to dropdown:", categoryName); //Debugging
+
+    if(!categoryDropdown) {
+        console.error("Category dropdown not found!");
+        return;
+    }
+
+    // Create the new category element
+    const categoryItem = document.createElement('a');
+    categoryItem.className = 'dropdown-item';
+    categoryItem.href = '#';
+    categoryItem.textContent = categoryName;
+    categoryItem.addEventListener('click', () => selectCategory(categoryName));
+
+    //Insert the new category before the input field and button
+    categoryDropdown.insertBefore(categoryItem, categoryDropdown.lastChild);
+
+        console.log("Successfully added category to dropdown:", categoryName); //Debugging
+    }
+
 function addCategoryInputField() {
-    const categoryDropdown = document.getElementById('categoryDropdown');
 
     // Separator line
     const divider = document.createElement('div');
