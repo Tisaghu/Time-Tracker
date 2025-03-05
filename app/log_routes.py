@@ -79,3 +79,18 @@ def add_log():
 def retrieve_categories():
     load_logs()  # Ensure categories are loaded from logs
     return jsonify({"categories": categories}), 200
+
+@log_bp.route('/add_category', methods=['POST'])
+def add_category():
+    data = request.json # Get JSON data from the request
+    category = data.get('category', '').strip()
+
+    if not category:
+        return jsonify({"error": "Invalid category"}), 400
+    
+    if category in categories:
+        return jsonify({"error": "Category already exists"}), 400
+    
+    categories.append(category)
+    return jsonify({"message": "Category added successfully"})
+

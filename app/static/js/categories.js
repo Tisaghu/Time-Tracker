@@ -8,7 +8,6 @@ const categoryDropdown = document.getElementById('categoryDropdown');
 
 export function updateCategoriesOnLoad() {
     console.log("Running updateCategoriesOnLoad()"); //Debugging
-    const categoryDropdown = document.getElementById('categoryDropdown');
 
     if(!categoryDropdown) {
         console.error("Category dropdown not found!");
@@ -74,7 +73,7 @@ function addCategoryInputField() {
     divider.className = 'dropdown-divider';
     categoryDropdown.appendChild(divider);
 
-    // Input field + button container
+    // Container for input field and button
     const inputContainer = document.createElement('div');
     inputContainer.className = 'd-flex p-2';
 
