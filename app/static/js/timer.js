@@ -13,6 +13,11 @@ let currentCategory = 'None';
 export function startTimer() {
     API.startTimer().then(data => {
         document.getElementById('status').innerText = data.message;
+
+        //Show the "status" and "elapsed_time" boxes when the timer starts
+        document.getElementById("status").style.display = "block";
+        
+        
         timerRunning = true;
         timerWasRun = true;
         clearInterval(intervalId);
@@ -28,8 +33,11 @@ export function startTimer() {
 export function stopOrResetTimer() {
     const stopButton = document.getElementById('stopButton');
     if (stopButton.innerText === 'Reset Timer') {
+        //hide elapsed time box on reset
+        document.getElementById("elapsed_time").style.display = "none";
         resetTimer();
     } else {
+        document.getElementById("elapsed_time").style.display = "block";
         stopTimer();
     }
 }
@@ -112,3 +120,10 @@ function updateStopButton(text) {
 export function setCurrentCategory(category) {
     currentCategory = category;
 }
+
+function hideTimerFields() {
+    document.getElementById("status").style.display = "none";
+    document.getElementById("elapsed_time").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", hideTimerFields)
