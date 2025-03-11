@@ -35,9 +35,11 @@ export function stopOrResetTimer() {
     if (stopButton.innerText === 'Reset Timer') {
         //hide elapsed time box on reset
         document.getElementById("elapsed_time").style.display = "none";
+        document.getElementById("saveButton").style.display = "none";
         resetTimer();
     } else {
         document.getElementById("elapsed_time").style.display = "block";
+        document.getElementById("saveButton").style.display = "";
         stopTimer();
     }
 }
@@ -121,9 +123,10 @@ export function setCurrentCategory(category) {
     currentCategory = category;
 }
 
-function hideTimerFields() {
+function hideInitialFields() {
     document.getElementById("status").style.display = "none";
     document.getElementById("elapsed_time").style.display = "none";
+    document.getElementById("saveButton").style.display = "none";
 }
 
-document.addEventListener("DOMContentLoaded", hideTimerFields)
+document.addEventListener("DOMContentLoaded", hideInitialFields)
