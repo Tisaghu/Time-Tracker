@@ -45,7 +45,6 @@ This is a time tracking app developed with Flask. The goal of this project is to
 ### Running the App
 
 1. Navigate to the `Time-Tracker` directory (if not already there):
-1. Navigate to the `Time-Tracker` directory (if not already there):
     ```bash
     cd Time-Tracker
     ```
