@@ -8,20 +8,23 @@ CSV_FILE = './time_records.csv'
 IMPORT_CSV_FILE = './history.csv'
 
 # In-memory categories (avoid duplicate categories)
-categories = []
+CATEGORIES = []
+LOGS = []
 
-# Load Logs from CSV
+# Load Logs from CSV, also gets categories and loads them to the CATEGORIES list
+# This function is called in the get_logs function
 def load_logs():
     logs = []
     try:
         with open(CSV_FILE, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                load_categories(row['category'])  # Load categories dynamically
+                load_categories_from_csv(row['category'])  # Load categories dynamically
                 logs.append(row)
     except FileNotFoundError:
         pass
     return logs
+
 
 # Import Logs from External CSV
 def import_logs():
@@ -41,7 +44,9 @@ def import_logs():
         pass
     return logs
 
+
 # Save a Single Log to CSV
+@log_bp.route('/save', methods=['POST'])
 def save_log(log):
     file_exists = os.path.isfile(CSV_FILE)
     with open(CSV_FILE, mode='a', newline='', encoding='utf-8') as file:
@@ -50,16 +55,20 @@ def save_log(log):
             writer.writeheader()
         writer.writerow(log)
 
-# Load Unique Categories
-def load_categories(category):
+
+# Loads all categories contained in the csv file to the CATEGORIES list
+# This function is called in the load_logs function
+def load_categories_from_csv(category):
     strip_cat = category.strip()
-    if strip_cat not in categories:
-        categories.append(strip_cat)
+    if strip_cat not in CATEGORIES:
+        CATEGORIES.append(strip_cat)
+
 
 # API Routes
 @log_bp.route('/', methods=['GET'])
 def get_logs():
     return jsonify(load_logs()), 200
+
 
 @log_bp.route('/add', methods=['POST'])
 def add_log():
@@ -72,13 +81,23 @@ def add_log():
         'category': data.get('category', '')
     }
     save_log(log)
-    load_categories(log['category'])
+    load_categories_from_csv(log['category'])
     return jsonify(log), 201
 
+#TODO: Fix this route
 @log_bp.route('/categories', methods=['GET'])
 def retrieve_categories():
     load_logs()  # Ensure categories are loaded from logs
-    return jsonify({"categories": categories}), 200
+
+    # Save categories to text file
+    update_categories_file()
+    return jsonify({"categories": CATEGORIES}), 200
+
+def update_categories_file():
+    with open('categories.txt', 'w') as f:
+        for category in CATEGORIES:
+            f.write(category + '\n')
+
 
 @log_bp.route('/add_category', methods=['POST'])
 def add_category():
@@ -88,9 +107,9 @@ def add_category():
     if not category:
         return jsonify({"error": "Invalid category"}), 400
     
-    if category in categories:
+    if category in CATEGORIES:
         return jsonify({"error": "Category already exists"}), 400
     
-    categories.append(category)
+    CATEGORIES.append(category)
     return jsonify({"message": "Category added successfully"})
 

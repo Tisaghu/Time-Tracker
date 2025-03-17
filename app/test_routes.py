@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
-from .log_routes import import_logs, load_logs, save_log
+from .log_routes import import_logs, load_logs, save_log, CATEGORIES
+
 
 test_bp = Blueprint('test', __name__)
 
@@ -20,3 +21,8 @@ def test_save_log():
     for log in imported_logs:
         save_log(log)
     return jsonify({"message": "Logs imported and saved successfully"}), 200
+
+# Test to check contents of categories
+@test_bp.route('/categories', methods=['GET'])
+def test_categories():
+    return jsonify({"categories": CATEGORIES }), 200

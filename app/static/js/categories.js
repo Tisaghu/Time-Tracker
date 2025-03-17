@@ -100,6 +100,13 @@ function addCategoryInputField() {
         const newCategory = newCategoryInput.value.trim();
         if(newCategory) {
             console.log("New Category Entered:", newCategory);
+            API.addCategory(newCategory)
+            .then(() => {
+                console.log("Successfully added new category:", newCategory);
+                addCategoryToDropdown(newCategory);
+                newCategoryInput.value = ''; // Clear the input field
+            })
+            .catch(error => console.error("Error adding category:", error));
         }
     })
 }
