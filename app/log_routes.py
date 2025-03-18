@@ -62,6 +62,7 @@ def load_categories_from_csv(category):
     strip_cat = category.strip()
     if strip_cat not in CATEGORIES:
         CATEGORIES.append(strip_cat)
+    update_categories_file()
 
 
 # API Routes
@@ -84,16 +85,26 @@ def add_log():
     load_categories_from_csv(log['category'])
     return jsonify(log), 201
 
-#TODO: Fix this route
+
 @log_bp.route('/categories', methods=['GET'])
 def retrieve_categories():
-    load_logs()  # Ensure categories are loaded from logs
-
+    load_logs()  # Ensure categories are loaded from logs (csv file)
     # Save categories to text file
     update_categories_file()
     return jsonify({"categories": CATEGORIES}), 200
 
+
 def update_categories_file():
+    #check if file exists
+    if os.path.isfile('categories.txt'):
+        #read the file and update the CATEGORIES list
+        with open('categories.txt', 'r') as f:
+            for line in f:
+                category = line.strip()
+                if category not in CATEGORIES:
+                    CATEGORIES.append(category)
+
+    #create the file and write the categories to it
     with open('categories.txt', 'w') as f:
         for category in CATEGORIES:
             f.write(category + '\n')
