@@ -47,10 +47,15 @@ export function stopOrResetTimer() {
 export function stopTimer() {
     API.stopTimer().then(data => {
         document.getElementById('status').innerText = data.message;
+        console.log(data);
         document.getElementById('elapsed_time').innerHTML = `
             <strong>Elapsed Time:</strong> ${data.elapsed_time}
             <br>
             <strong>Category:</strong> ${currentCategory}
+            <br>
+            <strong>Start Time:</strong> ${data.start_time}
+            <br>
+            <strong>End Time:</strong> ${data.end_time}
         `;
 
         clearInterval(intervalId);

@@ -2,8 +2,8 @@
 export const API = {
     
     //Timer functions
-    startTimer: () => fetch('/timer/start', { method: 'POST' }).then(res => res.json()),
-    stopTimer: () => fetch('/timer/stop', { method: 'POST' }).then(res => res.json()),
+    startTimer: () => fetch('/timer/start', { method: 'GET' }).then(res => res.json()),
+    stopTimer: () => fetch('/timer/stop').then(res => res.json()),
     checkElapsedTime: () => fetch('/timer/check').then(res => res.json()),
 
     //Category functions
