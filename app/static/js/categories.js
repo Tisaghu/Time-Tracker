@@ -36,8 +36,8 @@ export function updateCategoriesOnLoad() {
         } else {
             data.categories.forEach(category => {
                 addCategoryToDropdown(category);
-                console.log("Added category to dropdown:", category); //Debugging
             });
+            console.log("Successfully added all categories to dropdown."); //Debugging
         }
 
         // Add the input field and button dynamically
@@ -46,8 +46,6 @@ export function updateCategoriesOnLoad() {
 }
 
 function addCategoryToDropdown(categoryName) {
-    console.log("Adding category to dropdown:", categoryName); //Debugging
-
     if(!categoryDropdown) {
         console.error("Category dropdown not found!");
         return;
@@ -63,7 +61,6 @@ function addCategoryToDropdown(categoryName) {
     //Insert the new category before the input field and button
     categoryDropdown.insertBefore(categoryItem, categoryDropdown.lastChild);
 
-        console.log("Successfully added category to dropdown:", categoryName); //Debugging
     }
 
 function addCategoryInputField() {

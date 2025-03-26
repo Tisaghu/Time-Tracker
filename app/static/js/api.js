@@ -1,9 +1,13 @@
+
+
 //Handles all API requests (fetch calls)
 export const API = {
     
     //Timer functions
+    initTimer: ()=> fetch('/timer/init', { method: 'GET' }).then(res => res.json()),
     startTimer: () => fetch('/timer/start', { method: 'GET' }).then(res => res.json()),
     stopTimer: () => fetch('/timer/stop').then(res => res.json()),
+    resetTimer: () => fetch('/timer/reset').then(res => res.json()),
     checkElapsedTime: () => fetch('/timer/check').then(res => res.json()),
 
     //Category functions

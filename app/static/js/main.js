@@ -1,9 +1,13 @@
-import { startTimer, stopOrResetTimer } from './timer.js';
+import { API } from './api.js';
+import {  startTimer, stopOrResetTimer } from './timer.js';
 import { updateCategoriesOnLoad, selectCategory } from './categories.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
 
+    API.initTimer().then(data => {
+        console.log('Timer initialized:', data);
+    });
     //initializeTimerText();
     initializeButtons();
     initializeCategories();
