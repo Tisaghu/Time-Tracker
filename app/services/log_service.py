@@ -18,8 +18,12 @@ class LogService:
         self.storage.save_log(log)
         return log
     
+ 
+    #Categories 
+    #TODO: Seperate these into a different service
+    
     def get_categories(self):
-        return self.storage.load_categories()
+        return self.storage.get_categories()
     
     def add_category(self, data):
         category = data.get('category', '').strip()
