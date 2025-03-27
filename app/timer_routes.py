@@ -11,14 +11,14 @@ isRunning = False
 hasRun = False
 
 #Initialize Timer
-@timer_bp.route('/init')
+@timer_bp.route('/init', methods=['POST'])
 def init_timer():
     # Reset timer on initialization
     reset_timer()
     return jsonify({"message": "Timer initialized"}), 200
 
 # Start Timer
-@timer_bp.route('/start')
+@timer_bp.route('/start', methods=['POST'])
 def start_timer():
     global isRunning
     global hasRun
@@ -34,7 +34,7 @@ def start_timer():
     return jsonify({"message": "Timer started"}), 200
 
 # Stop Timer
-@timer_bp.route('/stop')
+@timer_bp.route('/stop', methods=['POST'])
 def stop_timer():
     global isRunning
     global hasRun
@@ -56,7 +56,7 @@ def stop_timer():
                         "end_time": timer_data['end_time']}), 200
 
 # Reset Timer
-@timer_bp.route('/reset')
+@timer_bp.route('/reset', methods=['POST'])
 def reset_timer():
     global isRunning
     global hasRun
