@@ -1,24 +1,52 @@
-//Handles all API requests (fetch calls)
 export const API = {
     
-    //Timer functions
-    startTimer: () => fetch('/timer/start', { method: 'POST' }).then(res => res.json()),
-    stopTimer: () => fetch('/timer/stop', { method: 'POST' }).then(res => res.json()),
-    checkElapsedTime: () => fetch('/timer/check').then(res => res.json()),
+    // Timer functions
+    async initTimer() {
+        return await API.fetchJSON('/timer/init', 'POST');
+    },
 
-    //Category functions
-    getCategories: () => fetch('/logs/categories').then(res => res.json()),
-    addCategory: (categoryName) => fetch('/logs/add_category', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({category: categoryName}) // Convert to JSON
-    })
-    .then(res => res.json())
-    .then(data => console.log("Server Response:", data)) // Log response
-    .catch(error => console.error("Fetch Error:", error)) // Handle errors
+    async startTimer() {
+        return await API.fetchJSON('/timer/start', 'POST');
+    },
 
-    //Log functions
+    async stopTimer() {
+        return await API.fetchJSON('/timer/stop', 'POST');
+    },
+
+    async resetTimer() {
+        return await API.fetchJSON('/timer/reset', 'POST');
+    },
+
+    async checkElapsedTime() {
+        return await API.fetchJSON('/timer/check', 'GET');
+    },
+
+    // Category functions
+    async getCategories() {
+        return await API.fetchJSON('/category/categories', 'GET');
+    },
+
+    async addCategory(categoryName) {
+        return await API.fetchJSON('/category/add_category', 'POST', { category: categoryName });
+    },
+
+    // Shared fetch function for all API calls
+    async fetchJSON(url, method = 'GET', body = null) {
+        try {
+            const options = { method, headers: { 'Content-Type': 'application/json' } };
+            if (body) options.body = JSON.stringify(body); // Only add body if needed
+
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error(`Fetch error (${method} ${url}):`, error);
+            return { error: error.message };
+        }
+    }
 };
-
 
 window.API = API;

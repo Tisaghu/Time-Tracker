@@ -47,10 +47,13 @@ export function stopOrResetTimer() {
 export function stopTimer() {
     API.stopTimer().then(data => {
         document.getElementById('status').innerText = data.message;
+        console.log(data);
         document.getElementById('elapsed_time').innerHTML = `
-            <strong>Elapsed Time:</strong> ${data.elapsed_time}
-            <br>
             <strong>Category:</strong> ${currentCategory}
+            <br>
+            <strong>Start Time:</strong> ${data.start_time}
+            <br>
+            <strong>End Time:</strong> ${data.end_time}
         `;
 
         clearInterval(intervalId);
@@ -66,6 +69,8 @@ export function stopTimer() {
 }
 
 export function resetTimer() {
+    API.resetTimer().then(data => {
+        document.getElementById('status').innerText = data.message;
     seconds = minutes = hours = 0;
     updateTimerDisplay();
     document.getElementById('elapsed_time').innerText = '';
@@ -75,8 +80,9 @@ export function resetTimer() {
     updateStopButton('Stop Timer');
 
     timerWasRun = timerRunning = canBeResumed = canBeReset = false;
-}
+})};
 
+/*
 export function checkElapsedTime() {
     if (timerRunning) {
         API.checkElapsedTime().then(data => {
@@ -84,6 +90,7 @@ export function checkElapsedTime() {
         });
     }
 }
+*/
 
 // Timer Helper Functions
 function updateTimer() {

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from .log_routes import import_logs, load_logs, save_log, CATEGORIES
+#from app.routes.log_routes import import_logs, load_logs, save_log, CATEGORIES
 
 
 test_bp = Blueprint('test', __name__)
