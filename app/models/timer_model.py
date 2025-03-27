@@ -19,7 +19,7 @@ class TimerModel:
         self.end_time = datetime.now()
         self.is_running = False
         elapsed_time = self.calculate_elapsed_time()
-        return True, {"message": "Timer stopped", "elapsed_time": elapsed_time}
+        return True, {"message": "Timer stopped", "elapsed_time": elapsed_time, "start_time": self.start_time.strftime("%Y-%m-%d %H:%M:%S"), "end_time": self.end_time.strftime("%Y-%m-%d %H:%M:%S")}
     
     def reset(self):
         self.start_time = None
@@ -34,3 +34,6 @@ class TimerModel:
         hours, remainder = divmod(elapsed_time.total_seconds(), 3600)
         minutes, seconds = divmod(remainder, 60)
         return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
+    
+    def format_time(self, time):
+        pass  # Placeholder for future formatting logic
