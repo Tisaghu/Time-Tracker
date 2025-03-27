@@ -18,21 +18,4 @@ class LogService:
         self.storage.save_log(log)
         return log
     
- 
-    #Categories 
-    #TODO: Seperate these into a different service
     
-    def get_categories(self):
-        return self.storage.get_categories()
-    
-    def add_category(self, data):
-        category = data.get('category', '').strip()
-
-        if not category:
-            return {"error": "Invalid category"}, 400
-        
-        if category in self.storage.CATEGORIES:
-            return {"error": "Category already exists"}, 400
-        
-        self.storage.add_category(category)
-        return {"message": "Category added successfully"}, 201

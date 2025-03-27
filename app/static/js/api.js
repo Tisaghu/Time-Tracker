@@ -23,11 +23,11 @@ export const API = {
 
     // Category functions
     async getCategories() {
-        return await API.fetchJSON('/logs/categories', 'GET');
+        return await API.fetchJSON('/category/categories', 'GET');
     },
 
     async addCategory(categoryName) {
-        return await API.fetchJSON('/logs/add_category', 'POST', { category: categoryName });
+        return await API.fetchJSON('/category/add_category', 'POST', { category: categoryName });
     },
 
     // Shared fetch function for all API calls

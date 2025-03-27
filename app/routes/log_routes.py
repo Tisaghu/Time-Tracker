@@ -14,12 +14,3 @@ def add_log():
     log = log_service.add_log(data)
     return jsonify(log), 201
 
-@log_bp.route('/categories', methods=['GET'])
-def retrieve_categories():
-    return jsonify({"categories": log_service.get_categories()}), 200
-
-@log_bp.route('/add_category', methods=['POST'])
-def add_category():
-    data = request.json
-    response, status = log_service.add_category(data)
-    return jsonify(response), status
