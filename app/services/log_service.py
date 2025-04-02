@@ -8,6 +8,7 @@ class LogService:
         return self.storage.load_logs()
     
     def add_log(self, data):
+        print("Received log:", data)
         log = {
             'record_id': data.get('record_id'),
             'start_time': data.get('start_time', ''),

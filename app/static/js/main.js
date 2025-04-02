@@ -1,6 +1,8 @@
 import { API } from './api.js';
-import {  startTimer, stopOrResetTimer } from './timer.js';
+import { startTimer, stopOrResetTimer } from './timer.js';
 import { updateCategoriesOnLoad, selectCategory } from './categories.js';
+import { addLog } from './logs.js'; 
+
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
@@ -17,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeButtons() {
     const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
+    const saveButton = document.getElementById('saveButton');
 
     if (startButton) {
         startButton.addEventListener('click', startTimer);
@@ -24,6 +27,14 @@ function initializeButtons() {
 
     if (stopButton) {
         stopButton.addEventListener('click', stopOrResetTimer);
+    }
+
+    if(saveButton) {
+        saveButton.addEventListener('click', addLog);
+    }
+    else
+    {
+        console.log("Save button not found");
     }
 }
 

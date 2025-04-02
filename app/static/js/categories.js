@@ -1,5 +1,3 @@
-// categories.js
-
 import { API } from './api.js';
 import { setCurrentCategory } from './timer.js';
 

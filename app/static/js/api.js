@@ -30,6 +30,11 @@ export const API = {
         return await API.fetchJSON('/category/add_category', 'POST', { category: categoryName });
     },
 
+    // Log functions
+    async addLog() {
+        return await API.fetchJSON('/log/add', 'POST', {category: categoryName, startTime: startTime, endTime: endTime, duration: duration})
+    },
+
     // Shared fetch function for all API calls
     async fetchJSON(url, method = 'GET', body = null) {
         try {

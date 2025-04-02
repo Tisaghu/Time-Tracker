@@ -1,5 +1,3 @@
-// timer.js
-
 import { API } from './api.js';
 
 let timerRunning = false;
@@ -8,7 +6,7 @@ let canBeResumed = false;
 let canBeReset = false;
 let intervalId;
 let seconds = 0, minutes = 0, hours = 0;
-let currentCategory = 'None';
+export let currentCategory = 'None';
 
 export function startTimer() {
     API.startTimer().then(data => {
@@ -128,6 +126,10 @@ function updateStopButton(text) {
 
 export function setCurrentCategory(category) {
     currentCategory = category;
+}
+
+export function getCurrentCategory(category) {
+    return currentCategory;
 }
 
 function hideInitialFields() {
