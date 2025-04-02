@@ -8,19 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     API.initTimer().then(data => {
         console.log('Timer initialized:', data);
     });
-    //initializeTimerText();
     initializeButtons();
     initializeCategories();
     updateCategoriesOnLoad();
 });
-
-
-function initializeTimerText() {
-    const timer = document.getElementById('timer');
-    if (timer) {
-        timer.innerHTML = `<strong>Total Elapsed Time:</strong> 00:00:00`;
-    }
-}
 
 
 function initializeButtons() {
