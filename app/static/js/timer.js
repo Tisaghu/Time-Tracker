@@ -80,15 +80,6 @@ export function resetTimer() {
     timerWasRun = timerRunning = canBeResumed = canBeReset = false;
 })};
 
-/*
-export function checkElapsedTime() {
-    if (timerRunning) {
-        API.checkElapsedTime().then(data => {
-            document.getElementById('elapsed_time').innerText = `Elapsed Time: ${data.elapsed_time}`;
-        });
-    }
-}
-*/
 
 // Timer Helper Functions
 function updateTimer() {
