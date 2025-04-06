@@ -20,6 +20,7 @@ const BUTTON_TEXT = {
 
 export function startTimer() {
     API.startTimer().then(data => {
+        console.log(data);
         document.getElementById('status').innerText = data.message;
 
         // Show the "status" and "elapsed_time" boxes when the timer starts
