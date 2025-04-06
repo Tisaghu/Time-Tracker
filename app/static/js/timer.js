@@ -1,28 +1,37 @@
 import { API } from './api.js';
 
+// Timer State
 let timerRunning = false;
 let timerWasRun = false;
 let canBeResumed = false;
 let canBeReset = false;
 let intervalId;
-let seconds = 0, minutes = 0, hours = 0;
+let elapsedSeconds = 0; // Single source of truth for time
 export let currentCategory = 'None';
+
+// Button Text Constants
+const BUTTON_TEXT = {
+    START: "Start Timer",
+    STOP: "Stop Timer",
+    RESET: "Reset Timer",
+    RESUME: "Resume Timer",
+    RUNNING: "Timer Running"
+};
 
 export function startTimer() {
     API.startTimer().then(data => {
         document.getElementById('status').innerText = data.message;
 
-        //Show the "status" and "elapsed_time" boxes when the timer starts
+        // Show the "status" and "elapsed_time" boxes when the timer starts
         document.getElementById("status").style.display = "block";
-        
-        
+
         timerRunning = true;
         timerWasRun = true;
         clearInterval(intervalId);
         intervalId = setInterval(updateTimer, 1000);
 
-        updateStartButton('Timer Running', true, ['btn-secondary'], canBeResumed ? ['btn-success'] : ['btn-primary']);
-        if (canBeReset) updateStopButton('Stop Timer');
+        updateStartButton(BUTTON_TEXT.RUNNING, true, ['btn-secondary'], canBeResumed ? ['btn-success'] : ['btn-primary']);
+        if (canBeReset) updateStopButton(BUTTON_TEXT.STOP);
 
         canBeReset = true;
     });
@@ -30,8 +39,8 @@ export function startTimer() {
 
 export function stopOrResetTimer() {
     const stopButton = document.getElementById('stopButton');
-    if (stopButton.innerText === 'Reset Timer') {
-        //hide elapsed time box on reset
+    if (stopButton.innerText === BUTTON_TEXT.RESET) {
+        // Hide elapsed time box on reset
         document.getElementById("elapsed_time").style.display = "none";
         document.getElementById("saveButton").style.display = "none";
         resetTimer();
@@ -58,8 +67,8 @@ export function stopTimer() {
         timerRunning = false;
 
         if (timerWasRun && !timerRunning) {
-            updateStartButton('Resume Timer', false, ['btn-success'], ['btn-secondary']);
-            updateStopButton('Reset Timer');
+            updateStartButton(BUTTON_TEXT.RESUME, false, ['btn-success'], ['btn-secondary']);
+            updateStopButton(BUTTON_TEXT.RESET);
             canBeResumed = true;
             canBeReset = true;
         }
@@ -69,33 +78,28 @@ export function stopTimer() {
 export function resetTimer() {
     API.resetTimer().then(data => {
         document.getElementById('status').innerText = data.message;
-    seconds = minutes = hours = 0;
-    updateTimerDisplay();
-    document.getElementById('elapsed_time').innerText = '';
-    document.getElementById('status').innerText = 'Timer Reset';
+        elapsedSeconds = 0; // Reset elapsed time
+        updateTimerDisplay();
+        document.getElementById('elapsed_time').innerText = '';
+        document.getElementById('status').innerText = 'Timer Reset';
 
-    updateStartButton('Start Timer', false, ['btn-primary'], ['btn-secondary', 'btn-success']);
-    updateStopButton('Stop Timer');
+        updateStartButton(BUTTON_TEXT.START, false, ['btn-primary'], ['btn-secondary', 'btn-success']);
+        updateStopButton(BUTTON_TEXT.STOP);
 
-    timerWasRun = timerRunning = canBeResumed = canBeReset = false;
-})};
-
+        timerWasRun = timerRunning = canBeResumed = canBeReset = false;
+    });
+}
 
 // Timer Helper Functions
 function updateTimer() {
-    seconds++;
-    if (seconds >= 60) {
-        seconds = 0;
-        minutes++;
-        if (minutes >= 60) {
-            minutes = 0;
-            hours++;
-        }
-    }
+    elapsedSeconds++; // Increment elapsed time
     updateTimerDisplay();
 }
 
 function updateTimerDisplay() {
+    const hours = Math.floor(elapsedSeconds / 3600);
+    const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+    const seconds = elapsedSeconds % 60;
     document.getElementById('timer').innerHTML = `<strong>Total Elapsed Time:</strong> ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
@@ -129,4 +133,4 @@ function hideInitialFields() {
     document.getElementById("saveButton").style.display = "none";
 }
 
-document.addEventListener("DOMContentLoaded", hideInitialFields)
+document.addEventListener("DOMContentLoaded", hideInitialFields);
