@@ -1,13 +1,17 @@
 import { API } from './api.js';
 
 // Timer State
-let timerRunning = false;
-let timerWasRun = false;
-let canBeResumed = false;
-let canBeReset = false;
-let intervalId;
-let elapsedSeconds = 0; // Single source of truth for time
-export let currentCategory = 'None';
+const TimerState = {
+    timerRunning: false,
+    timerWasRun: false,
+    canBeResumed: false,
+    canBeReset: false,
+    intervalId: null,
+    elapsedSeconds: 0, // Single source of truth for time
+    currentCategory: 'None'
+};
+
+export let { currentCategory } = TimerState;
 
 // Button Text Constants
 const BUTTON_TEXT = {
@@ -20,21 +24,27 @@ const BUTTON_TEXT = {
 
 export function startTimer() {
     API.startTimer().then(data => {
+        TimerState.timerRunning = true;
+        TimerState.timerWasRun = true;
+
         console.log(data);
         document.getElementById('status').innerText = data.message;
 
         // Show the "status" and "elapsed_time" boxes when the timer starts
         document.getElementById("status").style.display = "block";
 
-        timerRunning = true;
-        timerWasRun = true;
-        clearInterval(intervalId);
-        intervalId = setInterval(updateTimer, 1000);
+        clearInterval(TimerState.intervalId);
+        TimerState.intervalId = setInterval(updateTimer, 1000);
 
-        updateStartButton(BUTTON_TEXT.RUNNING, true, ['btn-secondary'], canBeResumed ? ['btn-success'] : ['btn-primary']);
-        if (canBeReset) updateStopButton(BUTTON_TEXT.STOP);
+        updateStartButton(
+            BUTTON_TEXT.RUNNING,
+            true,
+            ['btn-secondary'],
+            TimerState.canBeResumed ? ['btn-success'] : ['btn-primary']
+        );
+        if (TimerState.canBeReset) updateStopButton(BUTTON_TEXT.STOP);
 
-        canBeReset = true;
+        TimerState.canBeReset = true;
     });
 }
 
@@ -57,21 +67,21 @@ export function stopTimer() {
         document.getElementById('status').innerText = data.message;
         console.log(data);
         document.getElementById('elapsed_time').innerHTML = `
-            <strong>Category:</strong> ${currentCategory}
+            <strong>Category:</strong> ${TimerState.currentCategory}
             <br>
             <strong>Start Time:</strong> ${data.start_time}
             <br>
             <strong>End Time:</strong> ${data.end_time}
         `;
 
-        clearInterval(intervalId);
-        timerRunning = false;
+        clearInterval(TimerState.intervalId);
+        TimerState.timerRunning = false;
 
-        if (timerWasRun && !timerRunning) {
+        if (TimerState.timerWasRun && !TimerState.timerRunning) {
             updateStartButton(BUTTON_TEXT.RESUME, false, ['btn-success'], ['btn-secondary']);
             updateStopButton(BUTTON_TEXT.RESET);
-            canBeResumed = true;
-            canBeReset = true;
+            TimerState.canBeResumed = true;
+            TimerState.canBeReset = true;
         }
     });
 }
@@ -79,7 +89,7 @@ export function stopTimer() {
 export function resetTimer() {
     API.resetTimer().then(data => {
         document.getElementById('status').innerText = data.message;
-        elapsedSeconds = 0; // Reset elapsed time
+        TimerState.elapsedSeconds = 0; // Reset elapsed time
         updateTimerDisplay();
         document.getElementById('elapsed_time').innerText = '';
         document.getElementById('status').innerText = 'Timer Reset';
@@ -87,20 +97,20 @@ export function resetTimer() {
         updateStartButton(BUTTON_TEXT.START, false, ['btn-primary'], ['btn-secondary', 'btn-success']);
         updateStopButton(BUTTON_TEXT.STOP);
 
-        timerWasRun = timerRunning = canBeResumed = canBeReset = false;
+        TimerState.timerWasRun = TimerState.timerRunning = TimerState.canBeResumed = TimerState.canBeReset = false;
     });
 }
 
 // Timer Helper Functions
 function updateTimer() {
-    elapsedSeconds++; // Increment elapsed time
+    TimerState.elapsedSeconds++; // Increment elapsed time
     updateTimerDisplay();
 }
 
 function updateTimerDisplay() {
-    const hours = Math.floor(elapsedSeconds / 3600);
-    const minutes = Math.floor((elapsedSeconds % 3600) / 60);
-    const seconds = elapsedSeconds % 60;
+    const hours = Math.floor(TimerState.elapsedSeconds / 3600);
+    const minutes = Math.floor((TimerState.elapsedSeconds % 3600) / 60);
+    const seconds = TimerState.elapsedSeconds % 60;
     document.getElementById('timer').innerHTML = `<strong>Total Elapsed Time:</strong> ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
@@ -121,11 +131,11 @@ function updateStopButton(text) {
 }
 
 export function setCurrentCategory(category) {
-    currentCategory = category;
+    TimerState.currentCategory = category;
 }
 
-export function getCurrentCategory(category) {
-    return currentCategory;
+export function getCurrentCategory() {
+    return TimerState.currentCategory;
 }
 
 function hideInitialFields() {
