@@ -6,10 +6,6 @@ import { addLog } from './logs.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
-
-    API.initTimer().then(data => {
-        console.log('Timer initialized:', data);
-    });
     initializeButtons();
     initializeCategories();
     updateCategoriesOnLoad();

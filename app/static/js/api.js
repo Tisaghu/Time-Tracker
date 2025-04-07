@@ -1,10 +1,6 @@
 export const API = {
     
     // Timer functions
-    async initTimer() {
-        return await API.fetchJSON('/timer/init', 'POST');
-    },
-
     async startTimer() {
         return await API.fetchJSON('/timer/start', 'POST');
     },
