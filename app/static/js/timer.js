@@ -7,7 +7,7 @@ const TimerState = {
     canBeResumed: false,
     canBeReset: false,
     intervalId: null,
-    elapsedSeconds: 0, // Single source of truth for time
+    elapsedSeconds: 0, 
     currentCategory: 'None'
 };
 
@@ -26,8 +26,9 @@ export function startTimer() {
     API.startTimer().then(data => {
         TimerState.timerRunning = true;
         TimerState.timerWasRun = true;
+        TimerState.canBeReset = true;
 
-        console.log(data);
+        console.log(`Start Timer Response:`, data);
         document.getElementById('status').innerText = data.message;
 
         // Show the "status" and "elapsed_time" boxes when the timer starts
@@ -44,7 +45,7 @@ export function startTimer() {
         );
         if (TimerState.canBeReset) updateStopButton(BUTTON_TEXT.STOP);
 
-        TimerState.canBeReset = true;
+
     });
 }
 
@@ -64,6 +65,8 @@ export function stopOrResetTimer() {
 
 export function stopTimer() {
     API.stopTimer().then(data => {
+        TimerState.timerRunning = false;
+
         document.getElementById('status').innerText = data.message;
         console.log(data);
         document.getElementById('elapsed_time').innerHTML = `
@@ -75,7 +78,6 @@ export function stopTimer() {
         `;
 
         clearInterval(TimerState.intervalId);
-        TimerState.timerRunning = false;
 
         if (TimerState.timerWasRun && !TimerState.timerRunning) {
             updateStartButton(BUTTON_TEXT.RESUME, false, ['btn-success'], ['btn-secondary']);
@@ -88,6 +90,8 @@ export function stopTimer() {
 
 export function resetTimer() {
     API.resetTimer().then(data => {
+        TimerState.timerWasRun = TimerState.timerRunning = TimerState.canBeResumed = TimerState.canBeReset = false;
+
         document.getElementById('status').innerText = data.message;
         TimerState.elapsedSeconds = 0; // Reset elapsed time
         updateTimerDisplay();
@@ -97,9 +101,10 @@ export function resetTimer() {
         updateStartButton(BUTTON_TEXT.START, false, ['btn-primary'], ['btn-secondary', 'btn-success']);
         updateStopButton(BUTTON_TEXT.STOP);
 
-        TimerState.timerWasRun = TimerState.timerRunning = TimerState.canBeResumed = TimerState.canBeReset = false;
     });
 }
+
+
 
 // Timer Helper Functions
 function updateTimer() {
