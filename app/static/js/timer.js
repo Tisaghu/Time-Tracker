@@ -22,6 +22,21 @@ const BUTTON_TEXT = {
     RUNNING: "Timer Running"
 };
 
+// Element Constants
+const ELEMENTS = {
+    status: getElement('status'),
+    elapsedTime: getElement('elapsed_time'),
+    saveButton: getElement('saveButton'),
+    startButton: getElement('startButton'),
+    stopButton: getElement('stopButton'),
+    timer: getElement('timer')
+};
+
+// Utility function for getting elements
+function getElement(id) {
+    return document.getElementById(id);
+}
+
 export function startTimer() {
     API.startTimer().then(data => {
         TimerState.timerRunning = true;
@@ -29,10 +44,10 @@ export function startTimer() {
         TimerState.canBeReset = true;
 
         console.log(`Start Timer Response:`, data);
-        document.getElementById('status').innerText = data.message;
+        ELEMENTS.status.innerText = data.message;
 
         // Show the "status" and "elapsed_time" boxes when the timer starts
-        document.getElementById("status").style.display = "block";
+        showElement(ELEMENTS.status);
 
         clearInterval(TimerState.intervalId);
         TimerState.intervalId = setInterval(updateTimer, 1000);
@@ -44,21 +59,18 @@ export function startTimer() {
             TimerState.canBeResumed ? ['btn-success'] : ['btn-primary']
         );
         if (TimerState.canBeReset) updateStopButton(BUTTON_TEXT.STOP);
-
-
     });
 }
 
 export function stopOrResetTimer() {
-    const stopButton = document.getElementById('stopButton');
-    if (stopButton.innerText === BUTTON_TEXT.RESET) {
+    if (ELEMENTS.stopButton.innerText === BUTTON_TEXT.RESET) {
         // Hide elapsed time box on reset
-        document.getElementById("elapsed_time").style.display = "none";
-        document.getElementById("saveButton").style.display = "none";
+        hideElement(ELEMENTS.elapsedTime);
+        hideElement(ELEMENTS.saveButton);
         resetTimer();
     } else {
-        document.getElementById("elapsed_time").style.display = "block";
-        document.getElementById("saveButton").style.display = "";
+        showElement(ELEMENTS.elapsedTime);
+        showElement(ELEMENTS.saveButton);
         stopTimer();
     }
 }
@@ -67,9 +79,9 @@ export function stopTimer() {
     API.stopTimer().then(data => {
         TimerState.timerRunning = false;
 
-        document.getElementById('status').innerText = data.message;
+        ELEMENTS.status.innerText = data.message;
         console.log(data);
-        document.getElementById('elapsed_time').innerHTML = `
+        ELEMENTS.elapsedTime.innerHTML = `
             <strong>Category:</strong> ${TimerState.currentCategory}
             <br>
             <strong>Start Time:</strong> ${data.start_time}
@@ -92,19 +104,16 @@ export function resetTimer() {
     API.resetTimer().then(data => {
         TimerState.timerWasRun = TimerState.timerRunning = TimerState.canBeResumed = TimerState.canBeReset = false;
 
-        document.getElementById('status').innerText = data.message;
+        ELEMENTS.status.innerText = data.message;
         TimerState.elapsedSeconds = 0; // Reset elapsed time
         updateTimerDisplay();
-        document.getElementById('elapsed_time').innerText = '';
-        document.getElementById('status').innerText = 'Timer Reset';
+        ELEMENTS.elapsedTime.innerText = '';
+        ELEMENTS.status.innerText = 'Timer Reset';
 
         updateStartButton(BUTTON_TEXT.START, false, ['btn-primary'], ['btn-secondary', 'btn-success']);
         updateStopButton(BUTTON_TEXT.STOP);
-
     });
 }
-
-
 
 // Timer Helper Functions
 function updateTimer() {
@@ -116,7 +125,7 @@ function updateTimerDisplay() {
     const hours = Math.floor(TimerState.elapsedSeconds / 3600);
     const minutes = Math.floor((TimerState.elapsedSeconds % 3600) / 60);
     const seconds = TimerState.elapsedSeconds % 60;
-    document.getElementById('timer').innerHTML = `<strong>Total Elapsed Time:</strong> ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    ELEMENTS.timer.innerHTML = `<strong>Total Elapsed Time:</strong> ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
 function pad(num) {
@@ -124,7 +133,7 @@ function pad(num) {
 }
 
 function updateStartButton(text, disabled, addClasses, removeClasses) {
-    const startButton = document.getElementById('startButton');
+    const startButton = ELEMENTS.startButton;
     startButton.innerText = text;
     startButton.disabled = disabled;
     startButton.classList.add(...addClasses);
@@ -132,9 +141,26 @@ function updateStartButton(text, disabled, addClasses, removeClasses) {
 }
 
 function updateStopButton(text) {
-    document.getElementById('stopButton').innerText = text;
+    ELEMENTS.stopButton.innerText = text;
 }
 
+function hideElement(element) {
+    element.style.display = "none";
+}
+
+function showElement(element) {
+    element.style.display = "block";
+}
+
+function hideInitialFields() {
+    hideElement(ELEMENTS.status);
+    hideElement(ELEMENTS.elapsedTime);
+    hideElement(ELEMENTS.saveButton);
+}
+
+document.addEventListener("DOMContentLoaded", hideInitialFields);
+
+// Getter and Setter Functions
 export function setCurrentCategory(category) {
     TimerState.currentCategory = category;
 }
@@ -142,11 +168,3 @@ export function setCurrentCategory(category) {
 export function getCurrentCategory() {
     return TimerState.currentCategory;
 }
-
-function hideInitialFields() {
-    document.getElementById("status").style.display = "none";
-    document.getElementById("elapsed_time").style.display = "none";
-    document.getElementById("saveButton").style.display = "none";
-}
-
-document.addEventListener("DOMContentLoaded", hideInitialFields);
