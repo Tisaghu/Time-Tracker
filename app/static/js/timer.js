@@ -8,10 +8,15 @@ const TimerState = {
     canBeReset: false,
     intervalId: null,
     elapsedSeconds: 0, 
-    currentCategory: 'None'
+    currentCategory: 'None',
+    startTime: null,
+    endTime: null
 };
 
 export let { currentCategory } = TimerState;
+
+// Export TimerState directly
+export { TimerState };
 
 // Button Text Constants
 const BUTTON_TEXT = {
@@ -44,6 +49,9 @@ export function startTimer() {
         TimerState.canBeReset = true;
 
         console.log(`Start Timer Response:`, data);
+        console.log(`Start Time from Data:`, data.start_time)
+        TimerState.startTime = new Date(data.start_time)
+        console.log(`Start time after conversion:`, TimerState.startTime)
         ELEMENTS.status.innerText = data.message;
 
         // Show the "status" and "elapsed_time" boxes when the timer starts
