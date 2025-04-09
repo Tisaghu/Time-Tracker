@@ -86,7 +86,9 @@ export function stopOrResetTimer() {
 export function stopTimer() {
     API.stopTimer().then(data => {
         TimerState.timerRunning = false;
+        TimerState.endTime = new Date(data.end_time);
 
+        //Display "Timer Stopped" message
         ELEMENTS.status.innerText = data.message;
         console.log(data);
         ELEMENTS.elapsedTime.innerHTML = `
