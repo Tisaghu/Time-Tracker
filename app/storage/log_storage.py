@@ -34,7 +34,7 @@ class LogStorage:
     def add_log(self, data):
         print("Received log:", data)
         log = {
-            'record_id': data.get('record_id'),
+            'record_id': self.get_next_record_id(self.CSV_FILE),
             'start_time': data.get('start_time', ''),
             'end_time': data.get('end_time', ''),
             'duration': data.get('duration', ''),
@@ -42,3 +42,12 @@ class LogStorage:
         }
         self.save_log(log)
         return log
+    
+    def get_next_record_id(self, CSV_FILE):
+        try:
+            with open(CSV_FILE, mode='r', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+                record_ids = [int(row['record_id']) for row in reader if row['record_id'].isdigit()]
+                return max(record_ids, default=0) + 1
+        except FileNotFoundError:
+            return 1

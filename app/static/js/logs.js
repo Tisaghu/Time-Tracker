@@ -16,7 +16,9 @@ export function addLog() {
     console.log("Start Time:", start_time);
     console.log("End Time:", end_time);
 
-    let duration = calculateDuration(start_time, end_time)
+    let duration = calculateDuration(start_time, end_time);
+
+    API.addLog(category,start_time,end_time,duration);
 };
 
 function calculateDuration(start_time, end_time) {
