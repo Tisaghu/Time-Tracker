@@ -9,5 +9,6 @@ class LogService:
         return self.storage.load_logs()
     
     def add_log(self, data):
+        print("Received log data:", data)
         message = self.storage.add_log(data)
-        return jsonify(message)
+        return message

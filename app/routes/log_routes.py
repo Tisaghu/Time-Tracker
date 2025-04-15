@@ -13,6 +13,5 @@ def add_log():
     data = request.json
     if not data:
         return jsonify({'error': 'Invalid JSON data'}), 400
-    log = log_service.add_log(data)
-    return jsonify(log), 201
-
+    log = log_service.add_log(data) 
+    return jsonify(log), 201 

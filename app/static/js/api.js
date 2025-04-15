@@ -28,8 +28,18 @@ export const API = {
 
     // Log functions
     async addLog(categoryName, startTime, endTime, duration) {
-        console.log("API addLog called");
-        return await API.fetchJSON('/log/add', 'POST', {category: categoryName, startTime: startTime, endTime: endTime, duration: duration})
+        console.log("API addLog called with:");
+        console.log("Category:", categoryName);
+        console.log("Start Time:", startTime);
+        console.log("End Time:", endTime);
+        console.log("Duration:", duration);
+
+        return await API.fetchJSON('/log/add', 'POST', {
+            category: categoryName,
+            startTime: startTime,
+            endTime: endTime,
+            duration: duration
+        });
     },
 
     // Shared fetch function for all API calls
