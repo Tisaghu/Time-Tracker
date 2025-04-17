@@ -34,25 +34,28 @@ class LogStorage:
 
     def add_log(self, data):
         print("Received log:", data)
-
-        #formate the datetime strings
         raw_start_time = data.get('startTime', '')
         raw_end_time = data.get('endTime', '')
+        raw_duration = data.get('duration')
+        raw_category = data.get('category')
 
-        formatted_start_time = self.format_datetime(raw_start_time)
-        formatted_end_time = self.format_datetime(raw_end_time)
+        formatted_start_time = self._format_datetime(raw_start_time)
+        formatted_end_time = self._format_datetime(raw_end_time)
+
+        #format duration
+        formatted_duration = self._format_duration(raw_duration)
 
         log = {
-            'record_id': self.get_next_record_id(self.CSV_FILE),
+            'record_id': self._get_next_record_id(self.CSV_FILE),
             'start_time': formatted_start_time,
             'end_time': formatted_end_time,
-            'duration': data.get('duration', ''),
-            'category': data.get('category', '')
+            'duration': formatted_duration,
+            'category': raw_category
         }
         self.save_log(log)
         return log
     
-    def get_next_record_id(self, CSV_FILE):
+    def _get_next_record_id(self, CSV_FILE):
         try:
             with open(CSV_FILE, mode='r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
@@ -61,7 +64,7 @@ class LogStorage:
         except FileNotFoundError:
             return 1
         
-    def format_datetime(self, iso_datetime_str):
+    def _format_datetime(self, iso_datetime_str):
         # Helper function to parse ISO string and format it
         if not iso_datetime_str:
             return ""
@@ -75,3 +78,24 @@ class LogStorage:
         except (ValueError, TypeError) as e:
             print(f"Warning: Could not parse datetime string '{iso_datetime_str}'. Error: {e}")
             return iso_datetime_str
+        
+    def _format_duration(self, total_seconds):
+        # Convert total seconds into HH:MM:SS format
+        if total_seconds is None:
+            return ""
+        
+        try:
+            total_seconds = int(total_seconds)
+
+            if total_seconds < 0:
+                print(f"Warning: Received negative duration ({total_seconds}s). Formatting as 00:00:00.")
+                total_seconds = 0
+
+            hours, remainder = divmod(total_seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+
+            return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+        
+        except (ValueError, TypeError) as e:
+            print(f"Warning: Could not format duration '{total_seconds}'. Must be a number. Error: {e}")
+            return ""
