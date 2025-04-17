@@ -1,5 +1,6 @@
 import csv
 import os
+from datetime import datetime, timezone
 from app.storage.category_storage import CategoryStorage
 
 class LogStorage:
@@ -33,10 +34,18 @@ class LogStorage:
 
     def add_log(self, data):
         print("Received log:", data)
+
+        #formate the datetime strings
+        raw_start_time = data.get('startTime', '')
+        raw_end_time = data.get('endTime', '')
+
+        formatted_start_time = self.format_datetime(raw_start_time)
+        formatted_end_time = self.format_datetime(raw_end_time)
+
         log = {
             'record_id': self.get_next_record_id(self.CSV_FILE),
-            'start_time': data.get('start_time', ''),
-            'end_time': data.get('end_time', ''),
+            'start_time': formatted_start_time,
+            'end_time': formatted_end_time,
             'duration': data.get('duration', ''),
             'category': data.get('category', '')
         }
@@ -51,3 +60,18 @@ class LogStorage:
                 return max(record_ids, default=0) + 1
         except FileNotFoundError:
             return 1
+        
+    def format_datetime(self, iso_datetime_str):
+        # Helper function to parse ISO string and format it
+        if not iso_datetime_str:
+            return ""
+        try:
+            if iso_datetime_str.endswith('Z'):
+                dt_obj = datetime.fromisoformat(iso_datetime_str.replace('Z', '+00:00'))
+            else:
+                dt_obj = datetime.fromisoformat(iso_datetime_str)
+
+            return dt_obj.strftime('%Y-%m-%d %H:%M:%S')
+        except (ValueError, TypeError) as e:
+            print(f"Warning: Could not parse datetime string '{iso_datetime_str}'. Error: {e}")
+            return iso_datetime_str
