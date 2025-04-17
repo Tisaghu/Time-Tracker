@@ -4,8 +4,8 @@ from app.models.timer_model import TimerModel
 timer = TimerModel()
 
 def start_timer():
-    success, message = timer.start()
-    return {"message": message}, 201 if success else ({"error": message}, 409)
+    success, response = timer.start()
+    return response, 201 if success else ({"error": response}, 409)
 
 def stop_timer():
     success, response = timer.stop()

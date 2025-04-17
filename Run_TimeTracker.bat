@@ -5,7 +5,7 @@ cd /d "%BASEDIR%"
 
 REM Run the Python script to start the Flask app
 echo Starting Flask app...
-start /B python run.py
+start /B python app.py
 
 REM Wait a few seconds for the server to start
 timeout /t 2 /nobreak >nul
