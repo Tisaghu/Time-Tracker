@@ -1,8 +1,13 @@
 import { API } from './api.js';
 import { setCurrentCategory } from './timer.js';
 
-//Global variables
-const categoryDropdown = document.getElementById('categoryDropdown');
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM fully loaded and parsed");
+
+    //Get global variables after DOM content loaded
+    const categoryDropdown = document.getElementById('categoryDropdown');
+})
 
 export function updateCategoriesOnLoad() {
     console.log("Running updateCategoriesOnLoad()"); //Debugging
