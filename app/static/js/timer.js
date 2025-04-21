@@ -47,11 +47,7 @@ export function startTimer() {
         TimerState.timerRunning = true;
         TimerState.timerWasRun = true;
         TimerState.canBeReset = true;
-
-        console.log(`Start Timer Response:`, data);
-        console.log(`Start Time from Data:`, data.start_time)
         TimerState.startTime = new Date(data.start_time)
-        console.log(`Start time after conversion:`, TimerState.startTime)
         ELEMENTS.status.innerText = data.message;
 
         // Show the "status" and "elapsed_time" boxes when the timer starts
@@ -90,7 +86,6 @@ export function stopTimer() {
 
         //Display "Timer Stopped" message
         ELEMENTS.status.innerText = data.message;
-        console.log(data);
         ELEMENTS.elapsedTime.innerHTML = `
             <strong>Category:</strong> ${TimerState.currentCategory}
             <br>

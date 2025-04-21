@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
     initializeButtons();
     initializeCategories();
-    updateCategoriesOnLoad();
+    //updateCategoriesOnLoad();
 });
 
 
