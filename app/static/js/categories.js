@@ -1,5 +1,5 @@
 import { API } from './api.js';
-import { setCurrentCategory } from './timer.js';
+import { _setCurrentCategory } from './timer.js';
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -131,5 +131,5 @@ function addCategoryInputField() {
 
 export function selectCategory(categoryName) {
     document.getElementById('dropdownMenuButton').textContent = categoryName;
-    setCurrentCategory(categoryName); // Update the timer with the selected category
+    _setCurrentCategory(categoryName); // Update the timer with the selected category
 }
