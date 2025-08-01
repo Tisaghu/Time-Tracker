@@ -39,6 +39,9 @@ class CategoryStorage:
 
 
     def update_categories_file(self):
-        with open('categories.txt', 'w') as f:
-            for category in self.CATEGORIES:
-                f.write(category + '\n')
+        try:    
+            with open('categories.txt', 'w') as f:
+                for category in self.CATEGORIES:
+                    f.write(category + '\n')
+        except Exception as e:
+            print(f"Error writing categories file: {e}")
