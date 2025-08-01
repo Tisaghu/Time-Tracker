@@ -33,8 +33,9 @@ class CategoryStorage:
         return self.CATEGORIES
 
     def add_category(self, category):
-        self.CATEGORIES.append(category)
-        self.update_categories_file()
+        if category and category not in self.CATEGORIES:
+            self.CATEGORIES.append(category)
+            self.update_categories_file()
 
 
     def update_categories_file(self):
