@@ -29,33 +29,25 @@ const BUTTON_TEXT = {
 
 // Element Constants
 const ELEMENTS = {
-    status: getElement('status'),
-    elapsedTime: getElement('elapsed_time'),
-    saveButton: getElement('saveButton'),
-    startButton: getElement('startButton'),
-    stopButton: getElement('stopButton'),
-    timer: getElement('timer')
+    status: _getElement('status'),
+    elapsedTime: _getElement('elapsed_time'),
+    saveButton: _getElement('saveButton'),
+    startButton: _getElement('startButton'),
+    stopButton: _getElement('stopButton'),
+    timer: _getElement('timer')
 };
 
-// Utility function for getting elements
-function getElement(id) {
-    return document.getElementById(id);
-}
 
 export function startTimer() {
     API.startTimer().then(data => {
         TimerState.timerRunning = true;
         TimerState.timerWasRun = true;
         TimerState.canBeReset = true;
-
-        console.log(`Start Timer Response:`, data);
-        console.log(`Start Time from Data:`, data.start_time)
         TimerState.startTime = new Date(data.start_time)
-        console.log(`Start time after conversion:`, TimerState.startTime)
         ELEMENTS.status.innerText = data.message;
 
         // Show the "status" and "elapsed_time" boxes when the timer starts
-        showElement(ELEMENTS.status);
+        _showElement(ELEMENTS.status);
 
         clearInterval(TimerState.intervalId);
         TimerState.intervalId = setInterval(updateTimer, 1000);
@@ -73,12 +65,12 @@ export function startTimer() {
 export function stopOrResetTimer() {
     if (ELEMENTS.stopButton.innerText === BUTTON_TEXT.RESET) {
         // Hide elapsed time box on reset
-        hideElement(ELEMENTS.elapsedTime);
-        hideElement(ELEMENTS.saveButton);
+        _hideElement(ELEMENTS.elapsedTime);
+        _hideElement(ELEMENTS.saveButton);
         resetTimer();
     } else {
-        showElement(ELEMENTS.elapsedTime);
-        showElement(ELEMENTS.saveButton);
+        _showElement(ELEMENTS.elapsedTime);
+        _showElement(ELEMENTS.saveButton);
         stopTimer();
     }
 }
@@ -90,7 +82,6 @@ export function stopTimer() {
 
         //Display "Timer Stopped" message
         ELEMENTS.status.innerText = data.message;
-        console.log(data);
         ELEMENTS.elapsedTime.innerHTML = `
             <strong>Category:</strong> ${TimerState.currentCategory}
             <br>
@@ -154,27 +145,32 @@ function updateStopButton(text) {
     ELEMENTS.stopButton.innerText = text;
 }
 
-function hideElement(element) {
+// Utility function for getting elements
+function _getElement(id) {
+    return document.getElementById(id);
+}
+
+function _hideElement(element) {
     element.style.display = "none";
 }
 
-function showElement(element) {
+function _showElement(element) {
     element.style.display = "block";
 }
 
-function hideInitialFields() {
-    hideElement(ELEMENTS.status);
-    hideElement(ELEMENTS.elapsedTime);
-    hideElement(ELEMENTS.saveButton);
+function _hideInitialFields() {
+    _hideElement(ELEMENTS.status);
+    _hideElement(ELEMENTS.elapsedTime);
+    _hideElement(ELEMENTS.saveButton);
 }
 
-document.addEventListener("DOMContentLoaded", hideInitialFields);
+document.addEventListener("DOMContentLoaded", _hideInitialFields);
 
 // Getter and Setter Functions
-export function setCurrentCategory(category) {
+export function _setCurrentCategory(category) {
     TimerState.currentCategory = category;
 }
 
-export function getCurrentCategory() {
+export function _getCurrentCategory() {
     return TimerState.currentCategory;
 }

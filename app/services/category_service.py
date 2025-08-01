@@ -13,7 +13,7 @@ class CategoryService:
         if not category:
             return {"error": "Invalid category"}, 400
         
-        if category in self.storage.CATEGORIES:
+        if category in self.storage._CATEGORIES_CACHE:
             return {"error": "Category already exists"}, 400
         
         self.storage.add_category(category)

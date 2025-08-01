@@ -1,6 +1,8 @@
 export const API = {
     
-    // Timer functions
+    // ==================================================
+    // =============== TIMER FUNCTIONS =================
+    // ==================================================
     async startTimer() {
         return await API.fetchJSON('/timer/start', 'POST');
     },
@@ -17,7 +19,10 @@ export const API = {
         return await API.fetchJSON('/timer/check', 'GET');
     },
 
-    // Category functions
+
+    // ==================================================
+    // ============= CATEGORY FUNCTIONS ================
+    // ==================================================
     async getCategories() {
         return await API.fetchJSON('/category/categories', 'GET');
     },
@@ -26,7 +31,10 @@ export const API = {
         return await API.fetchJSON('/category/add_category', 'POST', { category: categoryName });
     },
 
-    // Log functions
+
+    // ==================================================
+    // ================ LOG FUNCTIONS ===================
+    // ==================================================
     async addLog(categoryName, startTime, endTime, duration) {
         console.log("API addLog called with:");
         console.log("Category:", categoryName);
@@ -42,6 +50,9 @@ export const API = {
         });
     },
 
+    // ==================================================
+    // ============= SHARED FETCH FUNCTION ==============
+    // ==================================================
     // Shared fetch function for all API calls
     async fetchJSON(url, method = 'GET', body = null) {
         try {
@@ -52,7 +63,6 @@ export const API = {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             return await response.json();
         } catch (error) {
             console.error(`Fetch error (${method} ${url}):`, error);

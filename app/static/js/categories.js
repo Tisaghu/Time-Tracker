@@ -1,12 +1,19 @@
 import { API } from './api.js';
-import { setCurrentCategory } from './timer.js';
+import { _setCurrentCategory } from './timer.js';
 
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM fully loaded and parsed");
 
-    //Get global variables after DOM content loaded
+    //Get global variables after ensuring DOM content loaded
     const categoryDropdown = document.getElementById('categoryDropdown');
+    const dropdownMenuButton = document.getElementById('dropdownMenuButton');
+
+    if(!categoryDropdown) {
+        console.error("ERROR: Could not find element with ID 'categoryDropdown' in the HTML.");
+    }
+
+    updateCategoriesOnLoad();
 })
 
 export function updateCategoriesOnLoad() {
@@ -18,10 +25,8 @@ export function updateCategoriesOnLoad() {
     }
 
     categoryDropdown.innerHTML = ''; // Clear existing items before adding new categories
-    console.log("Cleared category dropdown items."); //Debugging
 
     API.getCategories().then(data => {
-        console.log("Fetched categories from API:", data); //Debugging
 
         if(!data || !data.categories) {
             console.error("No categories found in API response!");
@@ -67,6 +72,16 @@ function addCategoryToDropdown(categoryName) {
     }
 
 function addCategoryInputField() {
+
+    if(!categoryDropdown) {
+        console.error("addCategoryInputField: categoryDropdown not found!");
+        return;
+    }
+
+    if(categoryDropdown.querySelector('#addCategoryButton')) {
+        console.log("Input field already exists, skipping add.");
+        return;
+    }
 
     // Separator line
     const divider = document.createElement('div');
@@ -116,5 +131,5 @@ function addCategoryInputField() {
 
 export function selectCategory(categoryName) {
     document.getElementById('dropdownMenuButton').textContent = categoryName;
-    setCurrentCategory(categoryName); // Update the timer with the selected category
+    _setCurrentCategory(categoryName); // Update the timer with the selected category
 }
