@@ -18,7 +18,7 @@ class LogStorage:
             with open(self.CSV_FILE, mode='r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    CategoryStorage.load_categories_from_csv(self, row['category'])
+                    CategoryStorage.load_categories_from_csv(row['category'])
                     logs.append(row)
         except FileNotFoundError:
             pass

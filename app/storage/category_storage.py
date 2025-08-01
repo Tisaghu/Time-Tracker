@@ -65,11 +65,21 @@ class CategoryStorage:
         print(f"DEBUG: Calculated category file path: {full_path}") # Debug log
         return full_path
 
-    def load_categories_from_csv(self, category):
+    @classmethod
+    def load_categories_from_csv(cls, category):
+        """
+        Add a category to the class-level cache if not already present.
+        Args:
+            category (str): The category to add.
+        Returns:
+            list: The updated categories cache.
+        """
+        if cls._CATEGORIES_CACHE is None:
+            cls._CATEGORIES_CACHE = []
         category = category.strip()
-        if category and category not in self._CATEGORIES_CACHE:
-            self._CATEGORIES_CACHE.append(category)
-        return self._CATEGORIES_CACHE
+        if category and category not in cls._CATEGORIES_CACHE:
+            cls._CATEGORIES_CACHE.append(category)
+        return cls._CATEGORIES_CACHE
     
     def load_categories_from_txt(self):
         file_path = self._get_category_file_path()
