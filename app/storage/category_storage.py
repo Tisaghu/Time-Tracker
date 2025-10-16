@@ -81,31 +81,6 @@ class CategoryStorage:
             cls._CATEGORIES_CACHE.append(category)
         return cls._CATEGORIES_CACHE
     
-    def load_categories_from_txt(self):
-        file_path = self._get_category_file_path()
-
-        if file_path is None:
-            print("ERROR: Skipping category loading because file path could not be determined.")
-            type(self)._CATEGORIES_CACHE = []
-            return
-        
-        if not type(self)._CATEGORIES_CACHE:
-            print(f"Attempting to load categories from: {file_path}")
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    loaded_categories = [line.strip() for line in f if line.strip()]
-                    type(self)._CATEGORIES_CACHE = loaded_categories
-                    print(f"Loaded categories: {type(self)._CATEGORIES_CACHE}")
-
-            except FileNotFoundError:
-                print(f"Category file not found at {file_path}. Starting with empty list.")
-                type(self)._CATEGORIES_CACHE = [] 
-            
-            except Exception as e:
-                #Catch other potential file reading errors
-                print(f"An error occurred reading {file_path}: {e}")
-                type(self)._CATEGORIES_CACHE = [] # Reset cache on error
-    
     def get_categories(self):
         self._load_categories_if_needed()
         return self._CATEGORIES_CACHE

@@ -4,8 +4,8 @@ from datetime import datetime, timezone
 from app.storage.category_storage import CategoryStorage
 
 class LogStorage:
-    CSV_FILE = './time_records.csv'
-    IMPORT_CSV_FILE = './history.csv'
+    CSV_FILE = 'time_records.csv'
+    IMPORT_CSV_FILE = 'history.csv'
     CATEGORIES = []
     
     def __init__(self):
@@ -15,7 +15,8 @@ class LogStorage:
     def load_logs(self):
         logs = []
         try:
-            with open(self.CSV_FILE, mode='r', encoding='utf-8') as file:
+            csv_path = self._resolve_csv_path(self.CSV_FILE)
+            with open(csv_path, mode='r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
                     CategoryStorage.load_categories_from_csv(row['category'])
@@ -25,8 +26,10 @@ class LogStorage:
         return logs
 
     def save_log(self, log):
-        file_exists = os.path.isfile(self.CSV_FILE)
-        with open(self.CSV_FILE, mode='a', newline='', encoding='utf-8') as file:
+        csv_path = self._resolve_csv_path(self.CSV_FILE)
+        file_exists = os.path.isfile(csv_path)
+        os.makedirs(os.path.dirname(csv_path) or '.', exist_ok=True)
+        with open(csv_path, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, fieldnames=['record_id', 'start_time', 'end_time', 'duration', 'category'])
             if not file_exists:
                 writer.writeheader()
@@ -57,7 +60,8 @@ class LogStorage:
     
     def _get_next_record_id(self, CSV_FILE):
         try:
-            with open(CSV_FILE, mode='r', encoding='utf-8') as file:
+            csv_path = self._resolve_csv_path(CSV_FILE)
+            with open(csv_path, mode='r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
                 record_ids = [int(row['record_id']) for row in reader if row['record_id'].isdigit()]
                 return max(record_ids, default=0) + 1
@@ -99,3 +103,14 @@ class LogStorage:
         except (ValueError, TypeError) as e:
             print(f"Warning: Could not format duration '{total_seconds}'. Must be a number. Error: {e}")
             return ""
+
+    def _resolve_csv_path(self, filename):
+        """Resolve CSV filename to an absolute path, preferring Flask instance folder when available."""
+        try:
+            from flask import current_app
+            instance_path = current_app.instance_path
+            path = os.path.join(instance_path, filename)
+            return path
+        except Exception:
+            # Fallback to project root
+            return os.path.abspath(filename)
